@@ -1,0 +1,209 @@
+/* MAIN SETTINGS */
+/*colors
+#057dcd;
+#43b0f1
+#1e3d58
+#e8eef1
+*/
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;1,400&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Roboto", sans-serif;
+  font-weight: bold;
+  box-sizing: border-box;
+}
+*:focus {
+  outline: 1px solid #e8eef1;
+}
+
+.container {
+  margin: 0 auto;
+  max-width: 1000px;
+  height: 100%;
+}
+.hello {
+  margin-top: 30px;
+  color: #e8eef1;
+}
+.main {
+  overflow: auto;
+  min-height: 100vh;
+  background: #1e3d58;
+}
+.create_task_title {
+  font-size: 18px;
+  margin-right: 15px;
+  flex-grow: 1;
+  background: none;
+  color: #e8eef1;
+  border: 2px solid #d45b67;
+  padding-left: 7px;
+  box-shadow: 7px 7px 24px -1px rgba(0, 0, 0, 0.3);
+  height: 40px;
+}
+.create_task_title::placeholder {
+  color: #e8eef1;
+  font-weight: 300;
+}
+.top_block {
+  display: flex;
+  justify-content: right;
+  margin-top: 30px;
+  padding: 17px;
+  border-radius: 10px;
+  background-color: #057dcd;
+}
+.main_hr {
+  border: 1px solid #e8eef1;
+  margin: 10px 0 30px;
+}
+.create_task {
+  box-shadow: 7px 7px 24px -1px rgba(0, 0, 0, 0.3);
+  font-size: 18px;
+  outline: none;
+  border: none;
+  color: #e8eef1;
+  background-color: #d45b67;
+  cursor: pointer;
+  padding: 7px;
+  transition: 0.3s;
+}
+.create_task:hover {
+  background-color: #c43b48;
+  transition: 0.2s ease all;
+  color: #e8eef1;
+}
+
+/*task item*/
+.task_item {
+  margin-bottom: 15px;
+  padding: 15px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 7px;
+  background: #057dcd;
+}
+.task_title {
+  font-size: 24px;
+  color: #e8eef1;
+}
+.task_item_flex {
+  display: flex;
+  justify-content: right;
+}
+.task-tool {
+  cursor: pointer;
+  border-radius: 50%;
+  padding: 8px;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #e8eef1;
+  justify-content: center;
+  align-content: center;
+  display: grid;
+  margin-left: 10px;
+}
+.task-tool img {
+  width: 100%;
+}
+/*pop ups*/
+/*QR CODE*/
+.qr_code_popup_wrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.35);
+}
+.qr_code_popup_title {
+  text-align: center;
+  color: #e8eef1;
+  font-size: 24px;
+  width: 75%;
+  margin-bottom: 15px;
+}
+.qr_code_popup_img {
+  width: 400px;
+  height: 400px;
+}
+.qr_code_popup {
+  width: 600px;
+  height: 600px;
+  position: absolute;
+  background: #057dcd;
+  border-radius: 7px;
+  top: 50%;
+  left: 50%;
+  padding: 10px;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.qr_code_popup_close {
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: grid;
+  justify-content: center;
+  align-content: center;
+}
+.qr_code_popup_close img {
+  max-width: 100%;
+}
+/*LOGIN*/
+.login_popup {
+  background: #1e3d58;
+  z-index: 100;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  display: grid;
+  justify-content: center;
+  align-content: center;
+}
+.centre_block {
+  padding: 30px;
+  background: #057dcd;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 7px;
+}
+.input_login_field {
+  font-size: 16px;
+  margin-bottom: 10px;
+  width: 100%;
+  height: 40px;
+  background: none;
+  border: 2px solid #e8eef1;
+  padding-left: 10px;
+  color: #e8eef1;
+}
+.input_login_field::placeholder {
+  color: #e8eef1;
+  font-weight: 400;
+}
+.enter {
+  margin-top: 10px;
+  padding: 10px 0;
+  width: 100%;
+  font-size: 15px;
+  background: #c43b48;
+  color: #e8eef1;
+  border: 0px;
+  cursor: pointer;
+}
+@media (max-width: 767px) {
+  .container {
+    max-width: none;
+    padding: 0 16px;
+  }
+}
