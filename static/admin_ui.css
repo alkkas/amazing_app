@@ -11,6 +11,8 @@
   padding: 0;
   font-family: "Roboto", sans-serif;
   font-weight: bold;
+  font-size: 16px;
+  color: #fff;
   box-sizing: border-box;
 }
 *:focus {
@@ -25,6 +27,7 @@
 .hello {
   margin-top: 30px;
   color: #e8eef1;
+  font-size: 32px;
 }
 .main {
   overflow: auto;
@@ -46,33 +49,61 @@
   color: #e8eef1;
   font-weight: 300;
 }
-.top_block {
+
+.manage_block {
+  margin-top: 50px;
+  border: 2px solid #fff;
+  border-radius: 15px;
+  padding: 10px;
+}
+.quiz_name {
   display: flex;
-  justify-content: right;
-  margin-top: 30px;
-  padding: 17px;
-  border-radius: 10px;
-  background-color: #057dcd;
+  margin-top: 40px;
+  margin-bottom: 40px;
 }
-.main_hr {
-  border: 1px solid #e8eef1;
-  margin: 10px 0 30px;
-}
-.create_task {
-  box-shadow: 7px 7px 24px -1px rgba(0, 0, 0, 0.3);
+.quiz_name input {
   font-size: 18px;
+
+  padding: 10px;
+
+  margin-left: 15px;
+  border: none;
+  border-bottom: 1px solid #333;
+  outline: none;
+}
+
+.add_quest {
+  /* max-height: 40px; */
+  margin-top: 25px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+.quest_data {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+.add_quest_inp {
+  width: 400px;
+  font-size: 16px;
+  padding: 4px;
+  margin-right: 20px;
   outline: none;
   border: none;
-  color: #e8eef1;
-  background-color: #d45b67;
-  cursor: pointer;
-  padding: 7px;
-  transition: 0.3s;
+  border-bottom: 1px solid #333;
 }
-.create_task:hover {
-  background-color: #c43b48;
-  transition: 0.2s ease all;
-  color: #e8eef1;
+.add_quest_btn {
+  outline: none;
+  /* color: #fff; */
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  transition: 0.4s;
+}
+.add_quest_btn:hover {
+  transition: 0.4s;
+  background-color: hsl(218, 89%, 70%);
 }
 
 /*task item*/
@@ -107,6 +138,23 @@
 }
 .task-tool img {
   width: 100%;
+}
+.top_block {
+  display: flex;
+  margin: 30px 0;
+  background-color: #057dcd;
+  padding: 15px;
+}
+.create_task {
+  border-radius: 5px;
+  background: #d45b67;
+  border: 0;
+  padding: 5px;
+
+  box-shadow: 7px 7px 24px -1px rgb(0 0 0 / 30%);
+}
+.create_task_title {
+  border-radius: 5px;
 }
 /*pop ups*/
 /*QR CODE*/
