@@ -123,19 +123,34 @@ function ListenBtns() {
                 })
             }
 
-            
+            // так как я хз как это сделать и дом постоянно обновляется
+            // то я просто повесил обработчики на постоянную запись
+            function checkForUpdate() {
+                document.querySelectorAll(".edit_pop_up_field").forEach(item => {
+                    setInterval(() => {
+                        item.setAttribute("value", item.value);
+                    }, 200)
+                })
+                document.querySelectorAll(".edit_pop_up_question").forEach(item => {
+                    setInterval(() => {
+                        item.setAttribute("value", item.value);
+                    }, 200)
+                })
+            }
+ 
             // и обработчики на добавление новых вопросов
             function addListener() {
                 let addAnswer = document.querySelectorAll(".add_field");
                 addAnswer.forEach(i => {
                     i.addEventListener("click", event => {
-                        console.log("clicked")
+                        console.log("clicked");
                         i.closest(".edit_pop_up_item").querySelector(".edit_pop_up_q_fields").innerHTML += `
                         <div class="edit_pop_up_input_wrapper">
-                            <input type="text" class="edit_pop_up_field" placeholder="введите ответ..." value="">
-                            <img src="../static/trash.png" alt="delete" class="edit_pop_up_delete edit_answer_delete">
+                            <input type="text" class="edit_pop_up_field" placeholder="введите ответ...">
+                            <img src="../static/trash.png" alt="delete" class="edit_pop_up_delete edit_answer_delete" value="">
                         </div>
                         `
+                        checkForUpdate();
                         delListener();
                     })
                 })
@@ -154,6 +169,7 @@ function ListenBtns() {
                             <img src="static/close.png" alt="add answer" class="add_field_btn">
                         </div>
                     </div>`
+                checkForUpdate();
                 delListener();
                 addListener();
             })
