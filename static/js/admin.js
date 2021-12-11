@@ -37,14 +37,16 @@ function disableScroll() {
 function enableScroll() {
     window.onscroll = function() {};
 }
+
 //слушаю кнопочки каждый раз когда добавляю новые штуки, штобы залетали братки в массив 
 function ListenBtns() {
     document.querySelectorAll(".popup_close").forEach(i => {
         i.addEventListener("click", () => {
             qrCodeWrapper.classList.remove("active");
             editWrapper.classList.remove("active");
-            enableScroll()
-            document.body.style.overflow = "auto"
+            enableScroll();
+            document.querySelector(".add_question").replaceWith(document.querySelector(".add_question").cloneNode(true));
+            document.body.style.overflow = "auto";
         })
     })
 
@@ -69,6 +71,7 @@ function ListenBtns() {
             let currentQuiz = parseUser().quizes[i.closest(".task_item").getAttribute("index")];
             editWrapper.classList.add("active");
             document.querySelector(".edit_pop_up_title").innerHTML = currentQuiz.title;
+            document.querySelector(".edit_pop_up_title").setAttribute("index", i.closest(".task_item").getAttribute("index"))
             document.body.style.overflow = "hidden";
             disableScroll();
             //нарисовать все с редактор
@@ -120,27 +123,38 @@ function ListenBtns() {
                 })
             }
 
-            delListener()
-
-
+            // так как я хз как это сделать и дом постоянно обновляется
+            // то я просто повесил обработчики на постоянную запись
+            function checkForUpdate() {
+                document.querySelectorAll(".edit_pop_up_field").forEach(item => {
+                    setInterval(() => {
+                        item.setAttribute("value", item.value);
+                    }, 200)
+                })
+                document.querySelectorAll(".edit_pop_up_question").forEach(item => {
+                    setInterval(() => {
+                        item.setAttribute("value", item.value);
+                    }, 200)
+                })
+            }
+ 
             // и обработчики на добавление новых вопросов
             function addListener() {
                 let addAnswer = document.querySelectorAll(".add_field");
                 addAnswer.forEach(i => {
                     i.addEventListener("click", event => {
+                        console.log("clicked");
                         i.closest(".edit_pop_up_item").querySelector(".edit_pop_up_q_fields").innerHTML += `
                         <div class="edit_pop_up_input_wrapper">
-                            <input type="text" class="edit_pop_up_field" placeholder="введите ответ..." value="">
-                            <img src="../static/trash.png" alt="delete" class="edit_pop_up_delete edit_answer_delete">
+                            <input type="text" class="edit_pop_up_field" placeholder="введите ответ...">
+                            <img src="../static/trash.png" alt="delete" class="edit_pop_up_delete edit_answer_delete" value="">
                         </div>
                         `
-                        delListener()
+                        checkForUpdate();
+                        delListener();
                     })
                 })
             }
-            addListener();
-
-
             let addQuestion = document.querySelector(".add_question");
             addQuestion.addEventListener("click", (event) => {
                 console.log("clicked")
@@ -160,7 +174,68 @@ function ListenBtns() {
                 delListener();
                 addListener();
             })
+            delListener();
+            addListener();
         })
+    })
+    //теперь надо сохранить в user все изменения 
+    const save = document.querySelector(".edit_pop_up_save");
+    save.addEventListener("click", () => {
+        console.log("clicked")
+        let user = parseUser()
+        let userQuiz = user.quizes[document.querySelector(".edit_pop_up_title").getAttribute("index")].quiz;
+        userQuiz = [];
+        let count  = 0
+        document.querySelectorAll(".edit_pop_up_item").forEach(item => {
+            userQuiz.push( 
+                {
+                    question: item.querySelector(".edit_pop_up_question").value,
+                    answers: []
+                }
+            )
+            let values  = Array.from(item.querySelectorAll("input.edit_pop_up_field"));
+            let valuesCount = 0;
+            values = values.map(item => item.value)
+            values.every((elem, index) => {
+                console.log(values.indexOf(elem))
+                if (values.indexOf(elem) != index) {
+                   alert("У вас есть одинаковые ответы, перепроверьте");
+                   return false;
+                }
+                valuesCount++;
+                return true;
+                
+            })
+            console.log(valuesCount, values.length)
+            if (valuesCount == values.length) {
+                values.forEach(i => {
+                    userQuiz[count].answers.push(i)
+                })
+                user.quizes[document.querySelector(".edit_pop_up_title").getAttribute("index")].quiz = userQuiz;
+                setUser(user);
+                // и тут я отправлю вам ребята файл с юзером
+            }
+            count++;
+        }) 
+
+
+    })
+    //а теперь пора все удалить 
+    const del = document.querySelector(".edit_pop_up_del")
+    del.addEventListener("click", () => {
+        let index = document.querySelector(".edit_pop_up_title").getAttribute("index");
+        document.querySelectorAll(`.task_item`).forEach(item => {
+            if (item.getAttribute("index") == index) {
+                item.remove()
+            }
+        })
+        let user = parseUser();
+        user.quizes.splice(index, 1);
+        setUser(user);
+        editWrapper.classList.remove("active");
+        document.querySelector(".add_question").replaceWith(document.querySelector(".add_question").cloneNode(true));
+        enableScroll();
+        document.body.style.overflow = "auto";
     })
 }
 
