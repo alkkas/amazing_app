@@ -142,8 +142,9 @@ function ListenBtns() {
 
 
             let addQuestion = document.querySelector(".add_question");
-                addQuestion.addEventListener("click", () => {
-                    document.querySelector(".edit_pop_up_items").innerHTML += `
+            addQuestion.addEventListener("click", (event) => {
+                console.log("clicked")
+                editFields.innerHTML += `
                     <div class="edit_pop_up_item"> 
                     <div class="edit_pop_up_question_wrapper">
                         <input type="text" class="edit_pop_up_question" placeholder="Введите вопрос">
@@ -156,7 +157,6 @@ function ListenBtns() {
                     </div>
                 </div>
                     `
-                    
                 delListener();
                 addListener();
             })
