@@ -169,8 +169,8 @@ function ListenBtns() {
                         <button class="add_field edit_pop_up_field " placeholder="введите ответ...">Добавить ответ
                         <img src="static/close.png" alt="add answer" class="add_field_btn">
                     </div>
-                </div>
-                    `
+                </div>`
+                checkForUpdate();
                 delListener();
                 addListener();
             })
