@@ -37,20 +37,130 @@ function disableScroll() {
 function enableScroll() {
     window.onscroll = function() {};
 }
+//слушаю кнопочки каждый раз когда добавляю новые штуки, штобы залетали братки в массив 
 function ListenBtns() {
+    document.querySelectorAll(".popup_close").forEach(i => {
+        i.addEventListener("click", () => {
+            qrCodeWrapper.classList.remove("active");
+            editWrapper.classList.remove("active");
+            enableScroll()
+            document.body.style.overflow = "auto"
+        })
+    })
+
     //qr коды 
     const qrCodeWrapper = document.querySelector(".qr_code_popup_wrapper");
     document.querySelectorAll(".task_qr").forEach((i) => {
         i.addEventListener("click", (item) => {
+            // при нажатии я проверю есть ли кр код, если нет то нужно сделать функцию для его созданя
+            // и кнопку еще для этого, пока не сделал
             let currentUser = parseUser().quizes[i.closest(".task_item").getAttribute("index")];
+            currentUser.qrcode ? console.log("qrcode exist") : console.log("You need to create qr code");
             qrCodeWrapper.classList.add("active");
             document.querySelector(".qr_code_popup_title").innerHTML = currentUser.title
             disableScroll();
         })
     })
-    document.querySelector(".qr_code_popup_close").addEventListener("click", () => {
-        qrCodeWrapper.classList.remove("active");
-        enableScroll()
+    //редактор опросников 
+    //ЭТО ПИЗДЕЦ 
+    const editWrapper = document.querySelector(".edit_pop_up");
+    document.querySelectorAll(".task_edit").forEach(i => {
+        i.addEventListener("click", event => {
+            let currentQuiz = parseUser().quizes[i.closest(".task_item").getAttribute("index")];
+            editWrapper.classList.add("active");
+            document.querySelector(".edit_pop_up_title").innerHTML = currentQuiz.title;
+            document.body.style.overflow = "hidden";
+            disableScroll();
+            //нарисовать все с редактор
+            let user = parseUser();
+            let editFields = document.querySelector(".edit_pop_up_items");
+            editFields.innerHTML = "";
+            console.log(currentQuiz)
+            if (currentQuiz?.quiz) {
+                let count = 0;
+                for (let i of currentQuiz.quiz) {
+                    editFields.innerHTML += `
+                    <div class="edit_pop_up_item"> 
+                        <div class="edit_pop_up_question_wrapper">
+                            <input type="text" class="edit_pop_up_question" placeholder="Введите вопрос" value="${i.question}">
+                            <img src="../static/trash.png" alt="delete" class="edit_pop_up_delete edit_question_delete">
+                        </div>
+                        <div class="edit_pop_up_q_fields quiz-${count}"></div>
+                        <div class="edit_pop_up_input_wrapper">
+                            <button class="add_field edit_pop_up_field " placeholder="введите ответ...">Добавить ответ
+                            <img src="static/close.png" alt="add answer" class="add_field_btn">
+                        </div>
+                    </div>`
+                    for (elem of i.answers) {
+                        editFields.querySelector(`.quiz-${count}`).innerHTML += `
+                        <div class="edit_pop_up_input_wrapper">
+                            <input type="text" class="edit_pop_up_field" placeholder="введите ответ..." value="${elem}">
+                            <img src="../static/trash.png" alt="delete" class="edit_pop_up_delete edit_answer_delete">
+                        </div>
+                        `
+                    }
+                    count++;
+                }
+            }
+            // теперь повесить обработчиеки на удаление 
+
+            function delListener() {
+                let delAnswer = document.querySelectorAll(".edit_answer_delete");
+                let delQuest = document.querySelectorAll(".edit_question_delete");
+                delAnswer.forEach(i => {
+                    i.addEventListener("click", event => {
+                        i.closest(".edit_pop_up_input_wrapper").remove()
+                    })
+                })
+                                
+                delQuest.forEach(i => {
+                    i.addEventListener("click", event => {
+                        i.closest(".edit_pop_up_item").remove()
+                    })
+                })
+            }
+
+            delListener()
+
+
+            // и обработчики на добавление новых вопросов
+            function addListener() {
+                let addAnswer = document.querySelectorAll(".add_field");
+                addAnswer.forEach(i => {
+                    i.addEventListener("click", event => {
+                        i.closest(".edit_pop_up_item").querySelector(".edit_pop_up_q_fields").innerHTML += `
+                        <div class="edit_pop_up_input_wrapper">
+                            <input type="text" class="edit_pop_up_field" placeholder="введите ответ..." value="">
+                            <img src="../static/trash.png" alt="delete" class="edit_pop_up_delete edit_answer_delete">
+                        </div>
+                        `
+                        delListener()
+                    })
+                })
+            }
+            addListener();
+
+
+            let addQuestion = document.querySelector(".add_question");
+                addQuestion.addEventListener("click", () => {
+                    document.querySelector(".edit_pop_up_items").innerHTML += `
+                    <div class="edit_pop_up_item"> 
+                    <div class="edit_pop_up_question_wrapper">
+                        <input type="text" class="edit_pop_up_question" placeholder="Введите вопрос">
+                        <img src="../static/trash.png" alt="delete" class="edit_pop_up_delete edit_question_delete">
+                    </div>
+                    <div class="edit_pop_up_q_fields"></div>
+                    <div class="edit_pop_up_input_wrapper">
+                        <button class="add_field edit_pop_up_field " placeholder="введите ответ...">Добавить ответ
+                        <img src="static/close.png" alt="add answer" class="add_field_btn">
+                    </div>
+                </div>
+                    `
+                    
+                delListener();
+                addListener();
+            })
+        })
     })
 }
 

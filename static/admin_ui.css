@@ -169,7 +169,8 @@
   opacity: 0;
   transition: 0.2s ease opacity;
 }
-.qr_code_popup_wrapper.active {
+.qr_code_popup_wrapper.active,
+.edit_pop_up.active {
   opacity: 1;
   transform: translateX(0%);
 }
@@ -199,7 +200,7 @@
   align-items: center;
   flex-direction: column;
 }
-.qr_code_popup_close {
+.popup_close {
   cursor: pointer;
   width: 30px;
   height: 30px;
@@ -210,9 +211,118 @@
   justify-content: center;
   align-content: center;
 }
-.qr_code_popup_close img {
+.popup_close img {
   max-width: 100%;
 }
+
+/*EDIT POP UP*/
+.edit_pop_up {
+  overflow-y: scroll;
+}
+.edit_pop_up_container {
+  max-width: 900px;
+  min-height: 100%;
+  background-color: #1e3d58;
+  margin: 30px auto 0;
+  border-radius: 5px;
+  position: relative;
+  padding: 15px;
+}
+.edit_pop_up_container input {
+  display: block;
+}
+.edit_pop_up_title {
+  font-size: 32px;
+  margin: 15px 0 30px;
+}
+.edit_pop_up_question {
+  font-size: 18px;
+  padding: 10px 15px;
+  background-color: #057dcd;
+  border: 2px solid #d45b67;
+  border-radius: 5px;
+  width: 100%;
+}
+.edit_pop_up_question::placeholder {
+  color: #e6e6e6;
+}
+.edit_pop_up_item {
+  margin-bottom: 45px;
+}
+.edit_pop_up_q_fields {
+  margin: 15px 0 0 60px;
+}
+.edit_pop_up_field {
+  margin: 10px 10px 10px 0;
+  font-size: 16px;
+  background-color: #1e3d58;
+  border: 2px solid #d45b67;
+  border-radius: 5px;
+  padding: 10px 15px;
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 400;
+}
+.edit_pop_up_field::placeholder {
+  color: #e6e6e6;
+  font-weight: 400;
+}
+.add_field_btn {
+  width: 15px;
+  height: 15px;
+  transform: rotate(45deg);
+  margin: 0 0 0 10px;
+}
+.add_field {
+  background-color: #d45b67;
+  margin: 10px 0 0 60px;
+  cursor: pointer;
+}
+.add_question {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70%;
+  border: 0;
+  margin-bottom: 60px;
+}
+.edit_pop_up_save,
+.edit_pop_up_del {
+  padding: 15px 20px;
+  background: #2aa030;
+  border: 0px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.edit_pop_up_del {
+  background: #d45b67;
+  margin-right: 10px;
+}
+
+.edit_pop_up_input_wrapper,
+.edit_pop_up_question_wrapper {
+  position: relative;
+  width: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.edit_pop_up_question_wrapper .edit_pop_up_delete {
+  width: 25px;
+  width: 22px;
+  margin-left: 10px;
+}
+.edit_pop_up_delete {
+  display: block;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
 /*LOGIN*/
 .login_popup {
   background: #1e3d58;
@@ -244,6 +354,7 @@
   padding-left: 10px;
   color: #e8eef1;
 }
+
 .input_login_field::placeholder {
   color: #e8eef1;
   font-weight: 400;
