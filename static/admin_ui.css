@@ -160,7 +160,8 @@
 /*pop ups*/
 /*QR CODE*/
 .qr_code_popup_wrapper,
-.edit_pop_up {
+.edit_pop_up,
+.statistic_wrapper {
   position: fixed;
   width: 100%;
   height: 100%;
@@ -170,7 +171,8 @@
   transition: 0.2s ease opacity;
 }
 .qr_code_popup_wrapper.active,
-.edit_pop_up.active {
+.edit_pop_up.active,
+.statistic_wrapper.active {
   opacity: 1;
   transform: translateX(0%);
 }
@@ -219,7 +221,8 @@
 .edit_pop_up {
   overflow-y: scroll;
 }
-.edit_pop_up_container {
+.edit_pop_up_container,
+.statistic {
   max-width: 900px;
   min-height: 100%;
   background-color: #1e3d58;
@@ -369,7 +372,28 @@
   border: 0px;
   cursor: pointer;
 }
-/*EDIT  */
+/*STATISTIC  */
+.statistic_title {
+  font-size: 32px;
+  margin-bottom: 30px;
+}
+.statistic_table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.statistic_table th,
+.statistic_table td {
+  border: 2px solid #d45b67;
+  padding: 7px;
+}
+.statistic_table th {
+  background: #057dcd;
+  border: 2px solid #c43b48;
+}
+.statistic_table td {
+  font-weight: 400;
+}
 
 @media (max-width: 767px) {
   .container {
