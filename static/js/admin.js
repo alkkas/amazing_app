@@ -44,8 +44,10 @@ function ListenBtns() {
         i.addEventListener("click", () => {
             qrCodeWrapper.classList.remove("active");
             editWrapper.classList.remove("active");
+            statistic.classList.remove("active")
             enableScroll();
             document.querySelector(".add_question").replaceWith(document.querySelector(".add_question").cloneNode(true));
+            document.querySelector(".edit_pop_up_save").replaceWith(document.querySelector(".edit_pop_up_save").cloneNode(true));
             document.body.style.overflow = "auto";
         })
     })
@@ -72,6 +74,7 @@ function ListenBtns() {
             editWrapper.classList.add("active");
             document.querySelector(".edit_pop_up_title").innerHTML = currentQuiz.title;
             document.querySelector(".edit_pop_up_title").setAttribute("index", i.closest(".task_item").getAttribute("index"))
+
             document.body.style.overflow = "hidden";
             disableScroll();
             //нарисовать все с редактор
@@ -176,66 +179,107 @@ function ListenBtns() {
             })
             delListener();
             addListener();
-        })
-    })
-    //теперь надо сохранить в user все изменения 
-    const save = document.querySelector(".edit_pop_up_save");
-    save.addEventListener("click", () => {
-        console.log("clicked")
-        let user = parseUser()
-        let userQuiz = user.quizes[document.querySelector(".edit_pop_up_title").getAttribute("index")].quiz;
-        userQuiz = [];
-        let count  = 0
-        document.querySelectorAll(".edit_pop_up_item").forEach(item => {
-            userQuiz.push( 
-                {
-                    question: item.querySelector(".edit_pop_up_question").value,
-                    answers: []
+
+
+            //теперь надо сохранить в user все изменения 
+            let  save = document.querySelector(".edit_pop_up_save");
+            save.addEventListener("click", () => {
+
+                console.log()
+                let user = parseUser()
+                let userQuiz = user.quizes[document.querySelector(".edit_pop_up_title").getAttribute("index")].quiz;
+                userQuiz = [];
+                let count  = 0
+                document.querySelectorAll(".edit_pop_up_item").forEach(item => {
+                    userQuiz.push( 
+                        {
+                            question: item.querySelector(".edit_pop_up_question").value,
+                            answers: []
+                        }
+                    )
+                    let valuesCount = 0;
+                    let values  = Array.from(item.querySelectorAll("input.edit_pop_up_field"));
+                    values = values.map(item => item.value)
+                    values.every((elem, index) => {
+                        console.log(values.indexOf(elem))
+                        if (values.indexOf(elem) != index) {
+                        alert("У вас есть одинаковые ответы, перепроверьте");
+                        return false;
+                        }
+                        valuesCount++;
+                        return true;
+                    })
+                    if (valuesCount == values.length) {
+                        values.forEach(i => {
+                            userQuiz[count].answers.push(i)
+                        })
+                    }
+                    count++;
+                }) 
+                if (count == document.querySelectorAll(".edit_pop_up_item").length) {
+                    console.log(userQuiz)
+                    user.quizes[document.querySelector(".edit_pop_up_title").getAttribute("index")].quiz = userQuiz;
+                    setUser(user);
+                    alert("Сохранено!")
+                    // и тут я отправлю вам ребята файл с юзером
                 }
-            )
-            let values  = Array.from(item.querySelectorAll("input.edit_pop_up_field"));
-            let valuesCount = 0;
-            values = values.map(item => item.value)
-            values.every((elem, index) => {
-                console.log(values.indexOf(elem))
-                if (values.indexOf(elem) != index) {
-                   alert("У вас есть одинаковые ответы, перепроверьте");
-                   return false;
-                }
-                valuesCount++;
-                return true;
-                
+
             })
-            console.log(valuesCount, values.length)
-            if (valuesCount == values.length) {
-                values.forEach(i => {
-                    userQuiz[count].answers.push(i)
+            //а теперь пора все удалить 
+            let del = document.querySelector(".edit_pop_up_del")
+            del.addEventListener("click", () => {
+                let index = document.querySelector(".edit_pop_up_title").getAttribute("index");
+                document.querySelectorAll(`.task_item`).forEach(item => {
+                    if (item.getAttribute("index") == index) {
+                        item.remove()
+                    }
                 })
-                user.quizes[document.querySelector(".edit_pop_up_title").getAttribute("index")].quiz = userQuiz;
+                let user = parseUser();
+                user.quizes.splice(index, 1);
                 setUser(user);
-                // и тут я отправлю вам ребята файл с юзером
-            }
-            count++;
-        }) 
-
-
+                editWrapper.classList.remove("active");
+                document.querySelector(".add_question").replaceWith(document.querySelector(".add_question").cloneNode(true));
+                enableScroll();
+                document.body.style.overflow = "auto";
+            })
+        })
     })
-    //а теперь пора все удалить 
-    const del = document.querySelector(".edit_pop_up_del")
-    del.addEventListener("click", () => {
-        let index = document.querySelector(".edit_pop_up_title").getAttribute("index");
-        document.querySelectorAll(`.task_item`).forEach(item => {
-            if (item.getAttribute("index") == index) {
-                item.remove()
+    //таблица с результатами 
+    const statistic = document.querySelector(".statistic_wrapper");
+    document.querySelectorAll(".task_statistics").forEach(i => {
+        i.addEventListener("click", elem => {
+            statistic.classList.add('active');
+            document.body.style.overflow = "hidden";
+            let quiz = parseUser().quizes[i.closest(".task_item").getAttribute("index")];
+            document.querySelector(".statistic_title").innerHTML = quiz.title;
+            if (quiz?.students) {
+                let field = document.querySelector(".table_content");
+                let header = document.querySelector(".statistic_headers");
+                field.innerHTML = "";
+                header.innerHTML = "<th>Имя</th>";
+                for(let i of quiz.quiz) {
+                    header.innerHTML += `
+                    <th class="table_question_title">${i.question}</th>
+                    `
+                }
+                for (let i of quiz.students) {
+                    let content = "";
+                    let name = "";
+                    
+                    name = `<th>${i.studentName}</th>`
+                   for (let elem of Object.values(i.answers)) {
+                       content  += `<td>${elem}</td>`;
+                   }
+                   field.innerHTML += `<tr >
+                   ${name + content}
+                   </tr >
+                   `;
+                }
+
+            } else {
+                alert("Нет информации по опросу!")
             }
         })
-        let user = parseUser();
-        user.quizes.splice(index, 1);
-        setUser(user);
-        editWrapper.classList.remove("active");
-        document.querySelector(".add_question").replaceWith(document.querySelector(".add_question").cloneNode(true));
-        enableScroll();
-        document.body.style.overflow = "auto";
     })
 }
 
@@ -321,7 +365,7 @@ function login(resolve, reject) {
                             qrcode: "https://link-to-the-picture.img",
                             quiz: [
                             {
-                                question: "What's the largest planet in solar system?",
+                                question: "другой вопрос лол",
                                 answers: [
                                     "variant 1",
                                     "variant 2",
