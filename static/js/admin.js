@@ -2,8 +2,6 @@
 const enterPageBlock  = document.querySelector(".login_popup");
 enterPageBlock.style.display = "none";
 
-
-
 function showQuizes(node, arr) {
     console.log(arr)
     for (let item of arr) {
@@ -12,9 +10,9 @@ function showQuizes(node, arr) {
             <div class="task_item" index="${arr.indexOf(item)}">
                 <h2 class="task_title">${item}</h2>
                 <div class="task_item_flex">
-                    <div class="task_statistics task-tool"><img src="/static/statistics.png" alt="statistic"></div>
-                    <div class="task_edit task-tool"><img src="/static/pencil.png" alt="pencil"></div>
-                    <div class="task_qr task-tool"><img src="/static/qr-code.png" alt="create qr code"></div>
+                    <div class="task_statistics task-tool"><img src="/static/images/statistics.png" alt="statistic"></div>
+                    <div class="task_edit task-tool"><img src="/static/images/pencil.png" alt="pencil"></div>
+                    <div class="task_qr task-tool"><img src="/static/images/qr-code.png" alt="create qr code"></div>
                 </div>
             </div>
             `
@@ -89,7 +87,7 @@ function ListenBtns() {
                     <div class="edit_pop_up_item"> 
                         <div class="edit_pop_up_question_wrapper">
                             <input type="text" class="edit_pop_up_question" placeholder="Введите вопрос" value="${i.question}">
-                            <img src="../static/trash.png" alt="delete" class="edit_pop_up_delete edit_question_delete">
+                            <img src="../static/images/trash.png" alt="delete" class="edit_pop_up_delete edit_question_delete">
                         </div>
                         <div class="edit_pop_up_q_fields quiz-${count}"></div>
                         <div class="edit_pop_up_input_wrapper">
@@ -101,7 +99,7 @@ function ListenBtns() {
                         editFields.querySelector(`.quiz-${count}`).innerHTML += `
                         <div class="edit_pop_up_input_wrapper">
                             <input type="text" class="edit_pop_up_field" placeholder="введите ответ..." value="${elem}">
-                            <img src="../static/trash.png" alt="delete" class="edit_pop_up_delete edit_answer_delete">
+                            <img src="../static/images/trash.png" alt="delete" class="edit_pop_up_delete edit_answer_delete">
                         </div>
                         `
                     }
@@ -150,7 +148,7 @@ function ListenBtns() {
                         i.closest(".edit_pop_up_item").querySelector(".edit_pop_up_q_fields").innerHTML += `
                         <div class="edit_pop_up_input_wrapper">
                             <input type="text" class="edit_pop_up_field" placeholder="введите ответ...">
-                            <img src="../static/trash.png" alt="delete" class="edit_pop_up_delete edit_answer_delete" value="">
+                            <img src="../static/images/trash.png" alt="delete" class="edit_pop_up_delete edit_answer_delete" value="">
                         </div>
                         `
                         checkForUpdate();
@@ -165,7 +163,7 @@ function ListenBtns() {
                     <div class="edit_pop_up_item"> 
                     <div class="edit_pop_up_question_wrapper">
                         <input type="text" class="edit_pop_up_question" placeholder="Введите вопрос">
-                        <img src="../static/trash.png" alt="delete" class="edit_pop_up_delete edit_question_delete">
+                        <img src="../static/images/trash.png" alt="delete" class="edit_pop_up_delete edit_question_delete">
                     </div>
                     <div class="edit_pop_up_q_fields"></div>
                     <div class="edit_pop_up_input_wrapper">

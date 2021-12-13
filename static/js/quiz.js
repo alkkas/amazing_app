@@ -1,5 +1,5 @@
 const nickname = document.getElementById('nickname_field');
-let name = document.querySelector(".enter_nickname")
+let name = document.querySelector(".enter_nickname");
 let userField = document.querySelector("#nickname_field");
 let data = {
     studentName: "",
@@ -78,6 +78,7 @@ function login(callback) {
         } else {
             data.studentName = userField.value;
             document.querySelector(".login_popup").style.display = "none";
+            // document.querySelector(".main").style.display = "block";
             localStorage.setItem("login", userField.value);
             callback();
         }

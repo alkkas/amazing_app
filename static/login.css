@@ -76,6 +76,7 @@ body {
 .quiz {
   border: 2px solid #057dcd;
   margin-top: 20px;
+  margin-bottom: 20px;
   padding: 15px;
   border-radius: 10px;
 }
