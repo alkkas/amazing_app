@@ -4,6 +4,10 @@ import json
 
 app = Flask(__name__)
 
+@app.route("/", methods=['GET', 'POST'])
+def student_func():
+    return render_template('login_template.html')
+
 
 @app.route("/admin", methods=['GET', 'POST'])
 def admin_func():
@@ -13,9 +17,11 @@ def admin_func():
         return json.dumps({"is_exist": is_exist})
     return render_template('admin_ui.html')
 
-@app.route("/", methods=['GET', 'POST'])
-def student_func():
-    return render_template('login_template.html')
+
+@app.route("/avenue", methods=['POST'])
+def data_worker():
+    data = request.get_json(force=True)
+    return json.dumps({"hello": "world"})
 
 
 if __name__ == '__main__':

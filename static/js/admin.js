@@ -1,4 +1,4 @@
-//global variables
+// global variables
 const enterPageBlock  = document.querySelector(".login_popup");
 const mainPartBlock = document.querySelector(".main");
 const hello_label = document.querySelector(".hello");
@@ -9,6 +9,18 @@ mainPartBlock.style.display = "none";
 function logout_click() {
     localStorage.removeItem('user');
     location.reload();
+}
+
+function send_to_server(url, data) {
+    console.log(typeof data);
+    let req = new XMLHttpRequest();
+    req.open("POST", url, true);
+    req.send(JSON.stringify(data));
+    req.onload = () => {
+        if (req.readyState === 4 && req.status === 200) {
+            console.log('❤🎂fjfgbersgbksdfuigb5879hturt');
+        }
+    }
 }
 
 function showQuizes(node, arr) {
@@ -192,11 +204,11 @@ function ListenBtns() {
             let save = document.querySelector(".edit_pop_up_save");
             save.addEventListener("click", () => {
 
-                console.log()
-                let user = parseUser()
+                console.log();
+                let user = parseUser();
                 let userQuiz = user.quizes[document.querySelector(".edit_pop_up_title").getAttribute("index")].quiz;
                 userQuiz = [];
-                let count  = 0
+                let count  = 0;
                 document.querySelectorAll(".edit_pop_up_item").forEach(item => {
                     userQuiz.push( 
                         {
@@ -227,8 +239,13 @@ function ListenBtns() {
                     console.log(userQuiz)
                     user.quizes[document.querySelector(".edit_pop_up_title").getAttribute("index")].quiz = userQuiz;
                     setUser(user);
-                    alert("Сохранено!")
+
+                    console.log('--fuck you nigga--');
+                    console.log(user);
+
                     // и тут я отправлю вам ребята файл с юзером
+                    send_to_server('/avenue', user);
+                    alert("Сохранено!")
                 }
 
             })
@@ -484,15 +501,6 @@ function login(resolve, reject) {
                     }
                 }
             }
-            
-            // setTimeout(() => {
-            //     enterPageBlock.style.display = "none";
-            //     я загрузил квизы, на данный момент будем считатать, что я это сдела
-            //     а пока будет просто объект которой я нарисую через функцию
-                
-            //     localStorage.setItem("user", JSON.stringify(user));
-            //     resolve(user);
-            // }, 0);
             hello_label.textContent = `Здравствуйте, ${localStorage.getItem("username")} !`;
         } else {
             alert("Некорректный ввод!");
