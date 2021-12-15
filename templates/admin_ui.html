@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>AMAZING APP</title>
+        <title>ADMIN PAGE</title>
         <link rel="stylesheet" href="static/admin_ui.css">
         <link rel="shortcut icon" href="/static/images/icon.png" type="image/x-icon">
     </head>
@@ -47,17 +47,15 @@
     <div class="login_popup">
         <div class="centre_block">
             <form action="">
-                
-                <input id="nickname_field" placeholder="Введите никнейм" type="text" class="input_nickname_field">
-                <input id="password_field" placeholder="Введите пароль" type="text" class="input_nickname_field">
-
-
-                <input id="nickname_field" placeholder="Введи имя" type="text" class="input_login_field" required>
-                <input id="password_field" placeholder="Введи пароль" type="text" class="input_login_field" required>
-                <button type="submit" class="enter">Enter</button>
+                <div class="hype_div">
+                    <input id="nickname_field" placeholder="Введите никнейм" type="text" class="input_nickname_field">
+                    <input id="password_field" placeholder="Введите пароль" type="password" class="input_nickname_field">
+                </div>
+                <button type="submit" class="enter_nickname">Enter</button>
             </form>
         </div>
     </div>
+    
     <div class="qr_code_popup_wrapper">
         <div class="qr_code_popup">
             <div class="popup_close">
@@ -98,13 +96,13 @@
                         </div>
                         <div class="edit_pop_up_input_wrapper">
                             <button class="add_field edit_pop_up_field " placeholder="введите ответ...">Добавить ответ
-                            <img src="static/close.png" alt="add answer" class="add_field_btn">
+                            <img src="/static/images/close.png" alt="add answer" class="add_field_btn">
                         </div>
                     </div>
                 </div> -->
             </div>
             <button class="edit_pop_up_question add_question">Добавить вопрос
-                <img src="static/close.png" alt="add answer" class="add_field_btn">
+                <img src="/static/images/close.png" alt="add answer" class="add_field_btn">
             </button>
             <div class="edit_pop_up_btns">
 
@@ -115,7 +113,10 @@
     </div>
     <div class="main">
         <div class="container">
-            <h1 class="hello">Здравствуйте, Гульназ!</h1>
+            <div class="header_block">
+                <h1 class="hello"></h1>
+                <button class="logout_btn" onclick="logout_click()">Выйти</button>
+            </div>
             <div class="top_block">
                 <input type="text" class="create_task_title" placeholder="Введите название опроса:">
                 <button class="create_task">Создать новый опрос</button>

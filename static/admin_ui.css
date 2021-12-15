@@ -1,4 +1,3 @@
-/* MAIN SETTINGS */
 /*colors
 #057dcd;
 #43b0f1
@@ -6,9 +5,6 @@
 #e8eef1
 */
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;1,400&display=swap");
-
-
-
 * {
   margin: 0;
   padding: 0;
@@ -21,6 +17,9 @@
 *:focus {
   outline: 1px solid #e8eef1;
 }
+body {
+  background: #1e3d58;
+}
 
 .container {
   margin: 0 auto;
@@ -28,7 +27,7 @@
   height: 100%;
 }
 .hello {
-  margin-top: 30px;
+  /* margin-top: 30px; */
   color: #e8eef1;
   font-size: 32px;
 }
@@ -52,7 +51,6 @@
   color: #e8eef1;
   font-weight: 300;
 }
-
 .manage_block {
   margin-top: 50px;
   border: 2px solid #fff;
@@ -107,6 +105,26 @@
 .add_quest_btn:hover {
   transition: 0.4s;
   background-color: hsl(218, 89%, 70%);
+}
+
+/* Header styles (hello+logout) */
+.header_block {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+.logout_btn {
+  background: #d45b67;
+  outline: none;
+  border: 1px solid #d45b67;
+
+  border-radius: 5px;
+  padding: 5px;
+  transition: 0.3s;
+}
+.logout_btn:hover {
+  transition: 0.3s;
+  border: 1px solid #fff;
 }
 
 /*task item*/
@@ -341,15 +359,6 @@
   justify-content: center;
   align-content: center;
 }
-.centre_block {
-  padding: 30px;
-  background: #057dcd;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-radius: 7px;
-}
 .input_login_field {
   font-size: 16px;
   margin-bottom: 10px;
@@ -360,7 +369,6 @@
   padding-left: 10px;
   color: #e8eef1;
 }
-
 .input_login_field::placeholder {
   color: #e8eef1;
   font-weight: 400;
@@ -375,6 +383,45 @@
   border: 0px;
   cursor: pointer;
 }
+/* Login by xamelllion */
+.centre_block {
+  padding: 15px 15px 8px 15px;
+  background-color: #e8eef1;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+}
+.hype_div {
+  display: flex;
+  flex-direction: column;
+}
+.input_nickname_field,
+.enter_nickname {
+  outline: none;
+  border-radius: 5px;
+  width: 252px;
+  height: 36px;
+  text-align: center;
+  margin-bottom: 7px;
+  font-size: 16px;
+  font-weight: bold;
+}
+.input_nickname_field {
+  border: 1px solid #ccc;
+  background-color: #e8eef1;
+  color: #1e3d58;
+}
+.enter_nickname {
+  border: none;
+  background-color: #1e3d58;
+  color: #e8eef1;
+  cursor: pointer;
+  transition: 0.2s ease all;
+}
+.enter_nickname:hover {
+  background-color: #1e3d58;
+}
+
 /*STATISTIC  */
 .statistic_title {
   font-size: 32px;

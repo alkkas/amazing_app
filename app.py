@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request
+import db_funcs
+import json
 
 app = Flask(__name__)
 
@@ -6,8 +8,9 @@ app = Flask(__name__)
 @app.route("/admin", methods=['GET', 'POST'])
 def admin_func():
     if request.method == 'POST':
-        name = request.get_json(force=True)
-        print(name['name'])
+        data = request.get_json(force=True)
+        is_exist = db_funcs.check_if_user_exists(data)
+        return json.dumps({"is_exist": is_exist})
     return render_template('admin_ui.html')
 
 @app.route("/", methods=['GET', 'POST'])

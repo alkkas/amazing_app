@@ -70,6 +70,14 @@ def teacher_imit():  # Имитация переменной с данными �
 #         pupil_answer[1][data_teacher[0][i]] = mark
 #     return(pupil_answer)
 
+def check_if_user_exists(data): # проверка аккаунта админа для последующего входа
+    username = data['username']
+    password = data['password']
+    cmd = f'''SELECT 1 FROM main_table WHERE name = '{username}'AND password = '{password}';'''
+    v = cursor.execute(cmd)
+    if v == 1:
+        return True # юзер существует
+    return False
 
 def quiz_get():  # получение информации из бд
     ch = input('название квиза?')
@@ -153,8 +161,8 @@ def closing():  # Отключение от базы данных
 
 
 connect()
-clean()
-update_dyn(teacher_imit())
-update_stc(teacher_imit())
-quiz_get()
-closing()
+# clean()
+# update_dyn(teacher_imit())
+# update_stc(teacher_imit())
+# quiz_get()
+# closing()
