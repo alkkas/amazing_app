@@ -11,17 +11,25 @@ def student_func():
 
 @app.route("/admin", methods=['GET', 'POST'])
 def admin_func():
-    if request.method == 'POST':
-        data = request.get_json(force=True)
-        is_exist = db_funcs.check_if_user_exists(data)
-        return json.dumps({"is_exist": is_exist})
     return render_template('admin_ui.html')
 
 
 @app.route("/avenue", methods=['POST'])
 def data_worker():
     data = request.get_json(force=True)
-    return json.dumps({"hello": "world"})
+
+    if data['type'] == 'check_log':
+        is_exist = db_funcs.check_if_user_exists(data)
+        if is_exist:
+            #send nudes
+            data_from_db = db_funcs.quizies_getter(data['username'])
+        return json.dumps({"is_exist": is_exist, "data": str(data_from_db)})
+
+    if data['type'] == 'quizies':
+        # write it to db
+        db_funcs.quiz_updater(data['name'], data['data'])
+        print(data['data'])
+        return json.dumps({"hello": "world"})
 
 
 if __name__ == '__main__':

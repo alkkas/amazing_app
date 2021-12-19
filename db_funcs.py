@@ -60,16 +60,6 @@ def teacher_imit():  # Имитация переменной с данными �
     return teacher_data
 
 
-# def pupil_imit(): # Имитация переменной с данными от школьника
-#     global pupil_answer
-#     pupil_answer = []
-#     pupil_answer.append(input('Ваше Имя'))
-#     pupil_answer.append(dict())
-#     for i in range(k_qual):
-#         mark = int(input(f'Оценка за {data_teacher[0][i]}'))
-#         pupil_answer[1][data_teacher[0][i]] = mark
-#     return(pupil_answer)
-
 def check_if_user_exists(data): # проверка аккаунта админа для последующего входа
     username = data['username']
     password = data['password']
@@ -79,15 +69,20 @@ def check_if_user_exists(data): # проверка аккаунта админа
         return True # юзер существует
     return False
 
-def quiz_get():  # получение информации из бд
-    ch = input('название квиза?')
-    cmd = f'''SELECT data FROM main_table WHERE task_name = '{ch}';'''
+
+def quiz_updater(username, data):  # записывает в бд обновлённые данные по квизам
+    a = str(data).replace('\'', '\"')
+    cmd = f''' UPDATE main_table SET data = "{escape_string(a)}" WHERE name = "{username}"; '''
+    cursor.execute(cmd)
+    connection.commit()
+
+def quizies_getter(username):  # получение информации из бд
+    cmd = f'''SELECT data FROM main_table WHERE name = "{username}";'''
     cursor.execute(cmd)
     for row in cursor:
         a = row['data']
-    print(a)
-    print(json.loads(a))
-
+    # print(a)
+    return a
 
 def update_dyn(data):  # Авто-создание критериев в динамической таблице
     global k

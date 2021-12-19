@@ -12,10 +12,16 @@ function logout_click() {
 }
 
 function send_to_server(url, data) {
-    console.log(typeof data);
+
+    // let arr = [];
+    // for(ind in data.quizes) {
+    //     arr.push([data.quizes[ind].title, data.quizes[ind].quiz]);
+    // } console.log(arr);
+    d = {'type': 'quizies', 'name': data.name, 'data': data}
+
     let req = new XMLHttpRequest();
     req.open("POST", url, true);
-    req.send(JSON.stringify(data));
+    req.send(JSON.stringify(d));
     req.onload = () => {
         if (req.readyState === 4 && req.status === 200) {
             console.log('❤🎂fjfgbersgbksdfuigb5879hturt');
@@ -25,6 +31,8 @@ function send_to_server(url, data) {
 
 function showQuizes(node, arr) {
     console.log(arr)
+    console.log('wefgwefwefwef')
+
     for (let item of arr) {
         if (item) {
             node.innerHTML += `
@@ -236,7 +244,7 @@ function ListenBtns() {
                     count++;
                 }) 
                 if (count == document.querySelectorAll(".edit_pop_up_item").length) {
-                    console.log(userQuiz)
+                    // console.log(userQuiz);
                     user.quizes[document.querySelector(".edit_pop_up_title").getAttribute("index")].quiz = userQuiz;
                     setUser(user);
 
@@ -328,173 +336,26 @@ function login(resolve, reject) {
             // Here I  will request user obj if all fileds were filed correctly 
             // but for now I assume that everything went good
             // [xmllln]: done
-            let data = JSON.stringify({ "username": userName.value, "password": userPassword.value });
+            let data = JSON.stringify({"type": "check_log", "username": userName.value, "password": userPassword.value });
             let req = new XMLHttpRequest();
-            req.open("POST", '/admin', true);
+            req.open("POST", '/avenue', true);
             req.send(data);
             req.onload = () => {
                 if (req.readyState === 4 && req.status === 200) {
                     let ch_exist = JSON.parse(req.response);
+
                     if (ch_exist['is_exist'] == true) {
                         console.log('done login');
                         localStorage.setItem("username", userName.value);
                         enterPageBlock.style.display = "none";
                         mainPartBlock.style.display = "block";
-                        let user = {
-                            name: userName.value,
-                            password: userPassword.value,
-                            quizes: [
-                                {
-                                    title: "Solar System",
-                                    qrcode: "https://link-to-the-picture.img",
-                                    quiz: [
-                                    {
-                                        question: "What's the largest planet in solar system?",
-                                        answers: [
-                                            "variant 1",
-                                            "variant 2",
-                                        ]
-                                    },
-                                    {
-                                        question: "Why Mars has red color?",
-                                        answers: [
-                                            "variant 1",
-                                            "variant 2",
-                                            "variant 3",
-                                            "variant 2",
-                                            "variant 3"
-                                        ]
-                                    },
-                                    ],
-                                    students: [ 
-                                        {   studentName: "abobus", 
-                                            answers: {
-                                                q1: "variant 1",
-                                                q2: "variant 2",
-                                                q3: "variant 2",
-                                                q4: "variant 2",
-                                            }
-                                        },
-                                        {   studentName: "abobus2", 
-                                            answers: {
-                                                q1: "variant 1",
-                                                q2: "variant 2",
-                                                q3: "variant 2",
-                                                q4: "variant 2",
-                                            }
-                                        },
-                                        {   studentName: "abobus3", 
-                                            answers: {
-                                                q1: "variant 1",
-                                                q2: "variant 3",
-                                                q3: "variant 4",
-                                                q4: "variant 2",
-                                            }
-                                    },
-                                    ]
-                                },
-                                {
-                                    title: "Почему бебра сладкая",
-                                    qrcode: "https://link-to-the-picture.img",
-                                    quiz: [
-                                    {
-                                        question: "другой вопрос лол",
-                                        answers: [
-                                            "variant 1",
-                                            "variant 2",
-                                        ]
-                                    },
-                                    {
-                                        question: "Why Mars has red color?",
-                                        answers: [
-                                            "variant 1",
-                                            "variant 2",
-                                            "variant 3",
-                                            "variant 2",
-                                            "variant 3"
-                                        ]
-                                    },
-                                    ],
-                                    students: [ 
-                                        {   studentName: "abobus", 
-                                            answers: {
-                                                q1: "variant 1",
-                                                q2: "variant 2",
-                                                q3: "variant 2",
-                                                q4: "variant 2",
-                                            }
-                                        },
-                                        {   studentName: "abobus2", 
-                                            answers: {
-                                                q1: "variant 1",
-                                                q2: "variant 2",
-                                                q3: "variant 2",
-                                                q4: "variant 2",
-                                            }
-                                        },
-                                        {   studentName: "abobus3", 
-                                            answers: {
-                                                q1: "variant 1",
-                                                q2: "variant 3",
-                                                q3: "variant 4",
-                                                q4: "variant 2",
-                                            }
-                                    },
-                                    ]
-                                },
-                                {
-                                    title: "Еще одно название",
-                                    qrcode: "https://link-to-the-picture.img",
-                                    quiz: [
-                                    {
-                                        question: "What's the largest planet in solar system?",
-                                        answers: [
-                                            "variant 1",
-                                            "variant 2",
-                                        ]
-                                    },
-                                    {
-                                        question: "Why Mars has red color?",
-                                        answers: [
-                                            "variant 1",
-                                            "variant 2",
-                                            "variant 3",
-                                            "variant 2",
-                                            "variant 3"
-                                        ]
-                                    },
-                                    ],
-                                    students: [ 
-                                        {   studentName: "abobus", 
-                                            answers: {
-                                                q1: "variant 1",
-                                                q2: "variant 2",
-                                                q3: "variant 2",
-                                                q4: "variant 2",
-                                            }
-                                        },
-                                        {   studentName: "abobus2", 
-                                            answers: {
-                                                q1: "variant 1",
-                                                q2: "variant 2",
-                                                q3: "variant 2",
-                                                q4: "variant 2",
-                                            }
-                                        },
-                                        {   studentName: "abobus3", 
-                                            answers: {
-                                                q1: "variant 1",
-                                                q2: "variant 3",
-                                                q3: "variant 4",
-                                                q4: "variant 2",
-                                            }
-                                    },
-                                    ]
-                                }
-                            ]
-                        }
-                        localStorage.setItem("user", JSON.stringify(user));
-                        resolve(user);
+                        
+                        // здесь был let user
+                        console.log(ch_exist['data']);
+                        console.log(typeof ch_exist['data']);
+                        let data_from_db = JSON.parse(ch_exist['data']);
+                        localStorage.setItem("user", JSON.stringify(data_from_db));
+                        resolve(data_from_db);
                     } else {
                         alert("Неверный логин или пароль!");
                         return;
