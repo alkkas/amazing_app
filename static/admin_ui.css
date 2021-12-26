@@ -202,11 +202,11 @@ body {
   color: #e8eef1;
   font-size: 24px;
   width: 75%;
-  margin-bottom: 15px;
+  margin-bottom: 25px;
 }
 .qr_code_popup_img {
-  width: 400px;
-  height: 400px;
+  max-width: 300px;
+  max-height: 300px;
 }
 .qr_code_popup {
   width: 600px;
@@ -237,6 +237,63 @@ body {
 .popup_close img {
   max-width: 100%;
 }
+/* qr code styles by xamelllion */
+.sixdigitcode {
+  font-size: 20px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+.sixdigitcode_span {
+  font-size: 24px;
+  font-weight: bold;
+}
+.qr_data {
+  display: none;
+}
+.quiz_start_end {
+  margin-top: 20px;
+}
+.st_nd_btns {
+  display: flex;
+  justify-content: space-between;
+}
+.st_quiz_btn {
+  background: #91c88e;
+  outline: none;
+  border: 1px solid #91c88e;
+
+  border-radius: 5px;
+  padding: 10px;
+  transition: 0.3s;
+}
+.nd_quiz_btn {
+  /* display: none; */
+  background: #d45b67;
+  outline: none;
+  border: 1px solid #d45b67;
+
+  border-radius: 5px;
+  padding: 10px;
+  transition: 0.3s;
+}
+.st_quiz_btn:hover, .nd_quiz_btn:hover {
+  transition: 0.3s;
+  border: 1px solid #fff;
+}
+
+/* .logout_btn {
+  background: #d45b67;
+  outline: none;
+  border: 1px solid #d45b67;
+
+  border-radius: 5px;
+  padding: 5px;
+  transition: 0.3s;
+}
+.logout_btn:hover {
+  transition: 0.3s;
+  border: 1px solid #fff;
+} */
 
 /*EDIT POP UP*/
 .edit_pop_up {

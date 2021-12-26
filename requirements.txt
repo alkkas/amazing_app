@@ -3,6 +3,7 @@ Pillow
 qrcode
 pymysql
 
+{"name":"admin","quizes":[]}
 
 let user = {
     name: userName.value,

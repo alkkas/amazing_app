@@ -12,19 +12,62 @@ function logout_click() {
 }
 
 function send_to_server(url, data) {
-
-    // let arr = [];
-    // for(ind in data.quizes) {
-    //     arr.push([data.quizes[ind].title, data.quizes[ind].quiz]);
-    // } console.log(arr);
     d = {'type': 'quizies', 'name': data.name, 'data': data}
 
     let req = new XMLHttpRequest();
     req.open("POST", url, true);
+    console.log(JSON.stringify(d))
     req.send(JSON.stringify(d));
     req.onload = () => {
         if (req.readyState === 4 && req.status === 200) {
             console.log('❤🎂fjfgbersgbksdfuigb5879hturt');
+        }
+    }
+}
+
+function quizSendler(username, quizname) {
+    d = {'type': 'startQuiz', 'username': username, 'quizname': quizname}
+    let req = new XMLHttpRequest();
+    req.open("POST", '/avenue', true);
+    req.send(JSON.stringify(d));
+    req.onload = () => {
+        if (req.readyState === 4 && req.status === 200) {
+            let dataFromServer = JSON.parse(req.response);
+            console.log([dataFromServer.sixdigitcode, dataFromServer.pathtoimg])
+
+            let user = parseUser();
+            for (let el in user.quizes) {
+                if (user.quizes[el].title === quizname) {
+                    console.log(user.quizes[el])
+                    user.quizes[el].qrcode = dataFromServer.pathtoimg;
+                    user.quizes[el].sixdigitcode = dataFromServer.sixdigitcode;
+                }
+            }
+            setUser(user);
+            send_to_server('/avenue', user)
+        }
+    }
+}
+
+function endQuiz(username, quizname) {
+    let user = parseUser();
+    for (let el in user.quizes) {
+        if (user.quizes[el].title === quizname) {
+            console.log(user.quizes[el])
+            delete user.quizes[el].qrcode;
+            delete user.quizes[el].sixdigitcode;
+        }
+    }
+    setUser(user);
+
+    d = {'type': 'endQuiz', 'username': username, 'quizname': quizname, 'data': user}
+    let req = new XMLHttpRequest();
+    req.open("POST", '/avenue', true);
+    req.send(JSON.stringify(d));
+    req.onload = () => {
+        if (req.readyState === 4 && req.status === 200) {
+            let dataFromServer = JSON.parse(req.response);
+            
         }
     }
 }
@@ -65,6 +108,7 @@ function enableScroll() {
     window.onscroll = function() {};
 }
 
+
 //слушаю кнопочки каждый раз когда добавляю новые штуки, штобы залетали братки в массив
 function ListenBtns() {
     document.querySelectorAll(".popup_close").forEach(i => {
@@ -83,17 +127,47 @@ function ListenBtns() {
     const qrCodeWrapper = document.querySelector(".qr_code_popup_wrapper");
     document.querySelectorAll(".task_qr").forEach((i) => {
         i.addEventListener("click", (item) => {
+            let st_btn = document.querySelector('.st_quiz_btn');
+            let nd_btn = document.querySelector('.nd_quiz_btn');
             // при нажатии я проверю есть ли кр код, если нет то нужно сделать функцию для его созданя
             // и кнопку еще для этого, пока не сделал
             let currentUser = parseUser().quizes[i.closest(".task_item").getAttribute("index")];
-            currentUser.qrcode ? console.log("qrcode exist") : console.log("You need to create qr code");
+            console.log('watch it', currentUser);
+            if (currentUser.qrcode) {
+                console.log("qrcode exist");
+                document.querySelector('.qr_data').style = 'display: block';
+                st_btn.style = 'display: none';
+                nd_btn.style = 'display: block';
+
+                // завершение квиза
+                nd_btn.addEventListener('click', () => {
+                    document.querySelector('.qr_data').style = 'display: none';
+                    st_btn.style = 'display: block';
+                    nd_btn.style = 'display: none';
+                    endQuiz(localStorage.getItem('username'), currentUser.title);
+                });
+            } else {
+                // старт квиза
+                st_btn.style = 'display: block';
+                nd_btn.style = 'display: none';
+                document.querySelector('.qr_data').style = 'display: none';
+                st_btn.addEventListener('click', () => {
+                    quizSendler(localStorage.getItem('username'), currentUser.title);
+                    document.querySelector('.qr_data').style = 'display: block';
+                    st_btn.style = 'display: none';
+                });
+            }
             qrCodeWrapper.classList.add("active");
             document.querySelector(".qr_code_popup_title").innerHTML = currentUser.title
+            document.querySelector('.sixdigitcode_span').innerHTML = currentUser.sixdigitcode;
+            document.querySelector('.qr_code_popup_img').src = currentUser.qrcode;
             disableScroll();
+
+
         })
     })
     //редактор опросников 
-    //ЭТО ПИЗДЕЦ 
+    //ЭТО ПИЗДЕЦ
     const editWrapper = document.querySelector(".edit_pop_up");
     document.querySelectorAll(".task_edit").forEach(i => {
         i.addEventListener("click", event => {
@@ -257,7 +331,7 @@ function ListenBtns() {
                 }
 
             })
-            //а теперь пора все удалить 
+            //а теперь пора все удалить
             let del = document.querySelector(".edit_pop_up_del")
             del.addEventListener("click", () => {
                 let index = document.querySelector(".edit_pop_up_title").getAttribute("index");
@@ -269,10 +343,14 @@ function ListenBtns() {
                 let user = parseUser();
                 user.quizes.splice(index, 1);
                 setUser(user);
+
+                send_to_server('/avenue', user);
+
                 editWrapper.classList.remove("active");
                 document.querySelector(".add_question").replaceWith(document.querySelector(".add_question").cloneNode(true));
                 enableScroll();
                 document.body.style.overflow = "auto";
+
             })
         })
     })
@@ -280,11 +358,15 @@ function ListenBtns() {
     const statistic = document.querySelector(".statistic_wrapper");
     document.querySelectorAll(".task_statistics").forEach(i => {
         i.addEventListener("click", elem => {
-            statistic.classList.add('active');
-            document.body.style.overflow = "hidden";
+            // statistic.classList.add('active');
+            // document.body.style.overflow = "hidden";
             let quiz = parseUser().quizes[i.closest(".task_item").getAttribute("index")];
-            document.querySelector(".statistic_title").innerHTML = quiz.title;
+            // document.querySelector(".statistic_title").innerHTML = quiz.title;
             if (quiz?.students) {
+                statistic.classList.add('active');
+                document.body.style.overflow = "hidden";
+                document.querySelector(".statistic_title").innerHTML = quiz.title;
+
                 let field = document.querySelector(".table_content");
                 let header = document.querySelector(".statistic_headers");
                 field.innerHTML = "";
@@ -354,7 +436,8 @@ function login(resolve, reject) {
                         console.log(ch_exist['data']);
                         console.log(typeof ch_exist['data']);
                         let data_from_db = JSON.parse(ch_exist['data']);
-                        localStorage.setItem("user", JSON.stringify(data_from_db));
+                        setUser(data_from_db);
+                        // localStorage.setItem("user", JSON.stringify(data_from_db));
                         resolve(data_from_db);
                     } else {
                         alert("Неверный логин или пароль!");
@@ -398,6 +481,13 @@ const createTaskBtn = document.querySelector(".create_task");
 createTaskBtn.addEventListener("click", (event) => {
     if (createTaskField.value.replace(/\s/g, "").length) {
         let user = parseUser();
+        for (let el in user.quizes) {
+            if (user.quizes[el].title === createTaskField.value) {
+                alert('Опрос с таким названием уже существует.');
+                return;
+            }
+        }
+        
         user.quizes.push({
             title: createTaskField.value
         })
@@ -407,8 +497,8 @@ createTaskBtn.addEventListener("click", (event) => {
         showQuizes(document.querySelector(".tasks"), arr);
         createTaskField.value = "";
         //тут я отправлю вам ребята новый объект на сервер
+        send_to_server('/avenue', parseUser());
     }
 })
-
 
 //а тут я уже буду делать проверку на кр коды погнали
