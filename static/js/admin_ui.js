@@ -44,7 +44,7 @@ function quizSendler(username, quizname) {
                 }
             }
             setUser(user);
-            send_to_server('/avenue', user)
+            // send_to_server('/avenue', user);
         }
     }
 }
@@ -60,14 +60,14 @@ function endQuiz(username, quizname) {
     }
     setUser(user);
 
-    d = {'type': 'endQuiz', 'username': username, 'quizname': quizname, 'data': user}
+    // d = {'type': 'endQuiz', 'username': username, 'quizname': quizname, 'data': user}
+    d = {'type': 'endQuiz', 'username': username, 'quizname': quizname}
     let req = new XMLHttpRequest();
     req.open("POST", '/avenue', true);
     req.send(JSON.stringify(d));
     req.onload = () => {
         if (req.readyState === 4 && req.status === 200) {
             let dataFromServer = JSON.parse(req.response);
-            
         }
     }
 }
@@ -123,6 +123,23 @@ function ListenBtns() {
         })
     })
 
+    
+    function endFuckingQuiz(currentUser) {
+        document.querySelector('.qr_data').style = 'display: none';
+        st_btn.style = 'display: block';
+        nd_btn.style = 'display: none';
+        endQuiz(localStorage.getItem('username'), currentUser.title);
+        document.removeEventListener("click", endFuckingQuiz);
+    }
+    function startFuckingQuiz(currentUser, st_btn) {
+        console.log('quiz starting');
+        quizSendler(localStorage.getItem('username'), currentUser.title);
+        document.querySelector('.qr_data').style = 'display: block';
+        st_btn.style = 'display: none';
+        document.removeEventListener("click", startFuckingQuiz);
+
+    }
+
     //qr коды 
     const qrCodeWrapper = document.querySelector(".qr_code_popup_wrapper");
     document.querySelectorAll(".task_qr").forEach((i) => {
@@ -132,7 +149,6 @@ function ListenBtns() {
             // при нажатии я проверю есть ли кр код, если нет то нужно сделать функцию для его созданя
             // и кнопку еще для этого, пока не сделал
             let currentUser = parseUser().quizes[i.closest(".task_item").getAttribute("index")];
-            console.log('watch it', currentUser);
             if (currentUser.qrcode) {
                 console.log("qrcode exist");
                 document.querySelector('.qr_data').style = 'display: block';
@@ -151,11 +167,7 @@ function ListenBtns() {
                 st_btn.style = 'display: block';
                 nd_btn.style = 'display: none';
                 document.querySelector('.qr_data').style = 'display: none';
-                st_btn.addEventListener('click', () => {
-                    quizSendler(localStorage.getItem('username'), currentUser.title);
-                    document.querySelector('.qr_data').style = 'display: block';
-                    st_btn.style = 'display: none';
-                });
+                st_btn.addEventListener('click', startFuckingQuiz(currentUser, st_btn));
             }
             qrCodeWrapper.classList.add("active");
             document.querySelector(".qr_code_popup_title").innerHTML = currentUser.title
@@ -233,12 +245,12 @@ function ListenBtns() {
                 document.querySelectorAll(".edit_pop_up_field").forEach(item => {
                     setInterval(() => {
                         item.setAttribute("value", item.value);
-                    }, 200)
+                    }, 500)
                 })
                 document.querySelectorAll(".edit_pop_up_question").forEach(item => {
                     setInterval(() => {
                         item.setAttribute("value", item.value);
-                    }, 200)
+                    }, 500)
                 })
             }
  

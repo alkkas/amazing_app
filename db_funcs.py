@@ -2,21 +2,9 @@ import pymysql
 from pymysql.converters import escape_string
 
 
-def connect():
-    global connection
-    try:
-        connection = pymysql.connect(
-            host="localhost",
-            port=3306,
-            user="root",
-            password="",
-            database="as_proj"
-            # cursorclass=pymysql.cursors.DictCursor
-        )
-        print('Подключено!')
-    except Exception as ex:
-        print('Ошибка при подключении!')
-        print(ex)
+
+
+
 
 
 # def com():  # Изменение фундамента бд
@@ -57,8 +45,8 @@ def teacher_imit():  # Имитация переменной с данными �
     return teacher_data
 
 
-def check_if_user_exists(data): # проверка аккаунта админа для последующего входа
-    cursor = connection.cursor()
+def check_if_user_exists(db, data): # проверка аккаунта админа для последующего входа
+    cursor = db.cursor()
     username = data['username']
     password = data['password']
     cmd = f'''SELECT 1 FROM main_table WHERE name = '{username}'AND password = '{password}';'''
@@ -69,24 +57,60 @@ def check_if_user_exists(data): # проверка аккаунта админа
     return False
 
 
-def quiz_updater(username, data):  # записывает в бд обновлённые данные по квизам
-    cursor = connection.cursor()
-    print('-------------', data)
+def quiz_updater(db, username, data):  # записывает в бд обновлённые данные по квизам
+    cursor = db.cursor()
     a = str(data).replace('\'', '\"')
     cmd = f''' UPDATE main_table SET data = "{escape_string(a)}" WHERE name = "{username}"; '''
     cursor.execute(cmd)
-    connection.commit()
+    db.commit()
     # cursor.close()
 
 
-def quizies_getter(username):  # получение информации из бд
-    cursor = connection.cursor()
+def quizies_getter(db, username):  # получение информации из бд
+    cursor = db.cursor()
     cmd = f'''SELECT data FROM main_table WHERE name = "{username}";'''
     cursor.execute(cmd)
-    # cursor.close()
-    for row in cursor:
-        a = row['data']
-    return a
+    data = cursor.fetchone()
+    print(data)
+    return data['data']
+
+def insertQuizData(db, username, quizname, quiz_link, link_to_qr, six_digit_code):
+    cursor = db.cursor()
+    cmd = f'''
+        INSERT INTO data (username, quizname, quiz_link, link_to_qr, six_digit_code)
+        VALUES ("{username}", "{quizname}", "{quiz_link}", "{link_to_qr}", "{six_digit_code}");
+    '''
+    print(cmd)
+    cursor.execute(cmd)
+    db.commit()
+
+def updateQuizData(db, username, quizname):
+    cursor = db.cursor()
+    # cmd = f'''
+    #     UPDATE data SET quiz_link="", link_to_qr="", six_digit_code=""
+    #     WHERE username = "{username}" AND quizname = "{quizname}";
+    # '''
+    cmd = f'''
+        DELETE FROM data
+        WHERE username = "{username}" AND quizname = "{quizname}";
+    '''
+    print(cmd)
+    cursor.execute(cmd)
+    db.commit()
+
+def getQuizInfo(db, username, quizname):
+    cursor = db.cursor()
+    cmd = f'''
+        SELECT link_to_qr FROM data 
+        WHERE username = "{username}" AND quizname = "{quizname}";
+    '''
+    cursor.execute(cmd)
+    data = cursor.fetchone()
+    print(data)
+    # d = data['link_to_qr']
+    # d = d.split('/')
+    # filename = d[len(d)-1]
+    return data['link_to_qr']
 
 # def update_dyn(data):  # Авто-создание критериев в динамической таблице
 #     global k
@@ -159,7 +183,7 @@ def quizies_getter(username):  # получение информации из б
 #     print('Отключено!')
 
 
-connect()
+# connect()
 # clean()
 # update_dyn(teacher_imit())
 # update_stc(teacher_imit())
