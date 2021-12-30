@@ -51,6 +51,8 @@ def data_worker():
         return json.dumps({"hello": "world"})
     
     if data['type'] == 'startQuiz':
+        print('--- START QUIZ ---')
+
         username = data['username']
         quizname = data['quizname']
 
@@ -60,24 +62,33 @@ def data_worker():
         print(linkToQuiz)
         pathToImgQr = extends.genQr(linkToQuiz, linkCode+'.png')
         # pathToImgQr, sixDigitCode, linkToQuiz
-
-        db_funcs.insertQuizData(db, username, quizname, linkToQuiz, pathToImgQr, sixDigitCode)
-
+        try:
+            db_funcs.insertQuizData(db, username, quizname, linkToQuiz, pathToImgQr, sixDigitCode)
+        except (pymysql.err.InternalError, pymysql.err.InterfaceError):
+            print('startQuiz - иди нахуй')
         # starting quiz - DONE
         # send to client link to  generated qr code, and 6-digit code - DONE
         # writing data in db
         return json.dumps({"sixdigitcode": sixDigitCode, "pathtoimg": pathToImgQr})
     
     if data['type'] == 'endQuiz':
-        print('I AM HERE')
+        print('--- END QUIZ ---')
         username = data['username']
         quizname = data['quizname']
         # db_funcs.quiz_updater(db, username, data['data'])
-        linkToQr = db_funcs.getQuizInfo(db, username, quizname)
-        db_funcs.updateQuizData(db, username, quizname)
+        # linkToQr = db_funcs.getQuizInfo(db, username, quizname)
+        try:
+            linkToQr = db_funcs.getQuizInfo(db, username, quizname)
+            db_funcs.updateQuizData(db, username, quizname)
+        except (pymysql.err.InternalError, pymysql.err.InterfaceError):
+            print('endQuiz - иди нахуй')
+
         print('-'*20, linkToQr)
-        path = os.path.join(os.path.abspath(os.path.dirname(__file__)), linkToQr.replace('/', '\\'))
-        os.remove(path)
+        try:
+            path = os.path.join(os.path.abspath(os.path.dirname(__file__)), linkToQr.replace('/', '\\'))
+            os.remove(path)
+        except FileNotFoundError:
+            pass
 
         return json.dumps({"fuck": "you"})
 

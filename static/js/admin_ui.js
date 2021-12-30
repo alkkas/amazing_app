@@ -25,7 +25,7 @@ function send_to_server(url, data) {
     }
 }
 
-function quizSendler(username, quizname) {
+function quizSendler(username, quizname, currentUser) {
     d = {'type': 'startQuiz', 'username': username, 'quizname': quizname}
     let req = new XMLHttpRequest();
     req.open("POST", '/avenue', true);
@@ -41,6 +41,8 @@ function quizSendler(username, quizname) {
                     console.log(user.quizes[el])
                     user.quizes[el].qrcode = dataFromServer.pathtoimg;
                     user.quizes[el].sixdigitcode = dataFromServer.sixdigitcode;
+                    document.querySelector('.sixdigitcode_span').innerHTML = dataFromServer.sixdigitcode;
+                    document.querySelector('.qr_code_popup_img').src = dataFromServer.pathtoimg;
                 }
             }
             setUser(user);
@@ -73,9 +75,7 @@ function endQuiz(username, quizname) {
 }
 
 function showQuizes(node, arr) {
-    console.log(arr)
-    console.log('wefgwefwefwef')
-
+    // console.log(arr)
     for (let item of arr) {
         if (item) {
             node.innerHTML += `
@@ -89,11 +89,9 @@ function showQuizes(node, arr) {
             </div>
             `
         }
-
     }
     ListenBtns()
 }
-
 function disableScroll() {
     // Get the current page scroll position
     scrollTop = window.pageYOffset || document.documentElement.scrollTop;
@@ -123,22 +121,6 @@ function ListenBtns() {
         })
     })
 
-    
-    function endFuckingQuiz(currentUser) {
-        document.querySelector('.qr_data').style = 'display: none';
-        st_btn.style = 'display: block';
-        nd_btn.style = 'display: none';
-        endQuiz(localStorage.getItem('username'), currentUser.title);
-        document.removeEventListener("click", endFuckingQuiz);
-    }
-    function startFuckingQuiz(currentUser, st_btn) {
-        console.log('quiz starting');
-        quizSendler(localStorage.getItem('username'), currentUser.title);
-        document.querySelector('.qr_data').style = 'display: block';
-        st_btn.style = 'display: none';
-        document.removeEventListener("click", startFuckingQuiz);
-
-    }
 
     //qr коды 
     const qrCodeWrapper = document.querySelector(".qr_code_popup_wrapper");
@@ -149,35 +131,42 @@ function ListenBtns() {
             // при нажатии я проверю есть ли кр код, если нет то нужно сделать функцию для его созданя
             // и кнопку еще для этого, пока не сделал
             let currentUser = parseUser().quizes[i.closest(".task_item").getAttribute("index")];
+
+            // завершение квиза
+            nd_btn.addEventListener('click', () => {
+                document.querySelector('.qr_data').style = 'display: none';
+                st_btn.style = 'display: block';
+                nd_btn.style = 'display: none';
+                endQuiz(localStorage.getItem('username'), currentUser.title);
+            }, {once:true});
+
+            // старт квиза
+            st_btn.addEventListener('click', () => {
+                console.log('quiz starting');
+                quizSendler(localStorage.getItem('username'), currentUser.title, currentUser);
+                document.querySelector('.qr_data').style = 'display: block';
+                st_btn.style = 'display: none';
+                nd_btn.style = 'display: block';
+            }, {once:true});
+
             if (currentUser.qrcode) {
                 console.log("qrcode exist");
                 document.querySelector('.qr_data').style = 'display: block';
                 st_btn.style = 'display: none';
                 nd_btn.style = 'display: block';
-
-                // завершение квиза
-                nd_btn.addEventListener('click', () => {
-                    document.querySelector('.qr_data').style = 'display: none';
-                    st_btn.style = 'display: block';
-                    nd_btn.style = 'display: none';
-                    endQuiz(localStorage.getItem('username'), currentUser.title);
-                });
             } else {
                 // старт квиза
                 st_btn.style = 'display: block';
                 nd_btn.style = 'display: none';
                 document.querySelector('.qr_data').style = 'display: none';
-                st_btn.addEventListener('click', startFuckingQuiz(currentUser, st_btn));
             }
             qrCodeWrapper.classList.add("active");
-            document.querySelector(".qr_code_popup_title").innerHTML = currentUser.title
+            document.querySelector(".qr_code_popup_title").innerHTML = currentUser.title;
             document.querySelector('.sixdigitcode_span').innerHTML = currentUser.sixdigitcode;
             document.querySelector('.qr_code_popup_img').src = currentUser.qrcode;
             disableScroll();
-
-
-        })
-    })
+        });
+    });
     //редактор опросников 
     //ЭТО ПИЗДЕЦ
     const editWrapper = document.querySelector(".edit_pop_up");
@@ -245,12 +234,12 @@ function ListenBtns() {
                 document.querySelectorAll(".edit_pop_up_field").forEach(item => {
                     setInterval(() => {
                         item.setAttribute("value", item.value);
-                    }, 500)
+                    }, 200)
                 })
                 document.querySelectorAll(".edit_pop_up_question").forEach(item => {
                     setInterval(() => {
                         item.setAttribute("value", item.value);
-                    }, 500)
+                    }, 200)
                 })
             }
  
@@ -514,3 +503,4 @@ createTaskBtn.addEventListener("click", (event) => {
 })
 
 //а тут я уже буду делать проверку на кр коды погнали
+// сделал где-то сверху [xamelllion]
