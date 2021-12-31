@@ -1,6 +1,7 @@
 import string
 import random
 import qrcode
+import os
 
 def genSomeCode(num):
     st = string.ascii_lowercase+string.digits
@@ -11,6 +12,7 @@ def genSomeCode(num):
 
 def genQr(link, img_name): # function by Shotgan
     pathToSave = 'static/qrs/'+img_name
+    if not os.path.exists('static/qrs/'): os.makedirs('static/qrs/') 
     img = qrcode.make(link)
     img.save(pathToSave)
     return pathToSave

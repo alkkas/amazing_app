@@ -12,12 +12,13 @@ body {
 }
 .main {
   min-width: 100vh;
+  display: none;
 }
 .login_container {
   height: 100%;
 }
 .container {
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
 }
 .some_amazing_logo {
@@ -76,7 +77,7 @@ body {
 .quiz {
   border: 2px solid #057dcd;
   margin-top: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   padding: 15px;
   border-radius: 10px;
 }

@@ -1,5 +1,5 @@
 __pycache__/
 .vscode/
+static/qrs/*.png
 test.json
 bot.py
-static/qrs/*.png

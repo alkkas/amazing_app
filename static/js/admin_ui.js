@@ -163,7 +163,10 @@ function ListenBtns() {
             qrCodeWrapper.classList.add("active");
             document.querySelector(".qr_code_popup_title").innerHTML = currentUser.title;
             document.querySelector('.sixdigitcode_span').innerHTML = currentUser.sixdigitcode;
-            document.querySelector('.qr_code_popup_img').src = currentUser.qrcode;
+            if (currentUser.qrcode)
+                document.querySelector('.qr_code_popup_img').src = currentUser.qrcode;
+            else document.querySelector('.qr_code_popup_img').src = '#';
+            
             disableScroll();
         });
     });
@@ -210,8 +213,8 @@ function ListenBtns() {
                     count++;
                 }
             }
-            // теперь повесить обработчиеки на удаление 
 
+            // теперь повесить обработчиеки на удаление 
             function delListener() {
                 let delAnswer = document.querySelectorAll(".edit_answer_delete");
                 let delQuest = document.querySelectorAll(".edit_question_delete");
@@ -355,6 +358,7 @@ function ListenBtns() {
             })
         })
     })
+    
     //таблица с результатами 
     const statistic = document.querySelector(".statistic_wrapper");
     document.querySelectorAll(".task_statistics").forEach(i => {

@@ -14,37 +14,6 @@ from pymysql.converters import escape_string
 #     print('Команда редактирования выполнена')
 
 
-def teacher_imit():  # Имитация переменной с данными от преподавателя
-    teacher_info = {"name": "username", "password": "12345678"}
-    teacher_data = {"name": "Amazing quiz", "quiz": [
-        {
-            "question": "What's the largest planet in solar system?",
-            "answers": [
-                "variant 1",
-                "variant 2",
-                "variant 3"
-            ]
-        },
-        {
-            "question": "Why Mars has red color?",
-            "answers": [
-                "variant 1",
-                "variant 2",
-                "variant 3"
-            ]
-        },
-        {
-            "question": "Почему бебра сладкая???",
-            "answers": [
-                "variant 1",
-                "variant 2",
-                "variant 3"
-            ]
-        }
-    ], 'teacher_info': teacher_info}
-    return teacher_data
-
-
 def check_if_user_exists(db, data): # проверка аккаунта админа для последующего входа
     cursor = db.cursor()
     username = data['username']
@@ -56,7 +25,6 @@ def check_if_user_exists(db, data): # проверка аккаунта адми
         return True # юзер существует
     return False
 
-
 def quiz_updater(db, username, data):  # записывает в бд обновлённые данные по квизам
     cursor = db.cursor()
     a = str(data).replace('\'', '\"')
@@ -65,13 +33,12 @@ def quiz_updater(db, username, data):  # записывает в бд обнов
     db.commit()
     # cursor.close()
 
-
 def quizies_getter(db, username):  # получение информации из бд
     cursor = db.cursor()
     cmd = f'''SELECT data FROM main_table WHERE name = "{username}";'''
     cursor.execute(cmd)
     data = cursor.fetchone()
-    print(data)
+    # print(data)
     return data['data']
 
 def insertQuizData(db, username, quizname, quiz_link, link_to_qr, six_digit_code):
@@ -111,6 +78,18 @@ def getQuizInfo(db, username, quizname):
     # d = d.split('/')
     # filename = d[len(d)-1]
     return data['link_to_qr']
+
+def getDataByCode(db, twelveCode):
+    cursor = db.cursor()
+    cmd = f'''
+        SELECT username, quizname FROM data 
+        WHERE twelve_digit_code = "{twelveCode}";
+    '''
+    cursor.execute(cmd)
+    data = cursor.fetchone()
+    # print(data)
+    return (data['quizname'], data['username'])
+
 
 # def update_dyn(data):  # Авто-создание критериев в динамической таблице
 #     global k

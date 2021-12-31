@@ -1,17 +1,16 @@
 const nickname = document.getElementById('nickname_field');
-let name = document.querySelector(".enter_nickname");
+let enter_nick = document.querySelector(".enter_nickname");
 let userField = document.querySelector("#nickname_field");
+
 let data = {
     studentName: "",
-    answers: {
-
-    }
+    answers: {}
 }
-
 
 window.addEventListener('load', () => {
     if (localStorage.getItem("login")) {
         document.querySelector(".login_popup").style.display = "none";
+        document.querySelector(".main").style.display = "block";
         data.studentName = localStorage.getItem("login");
         loadQuestions();
     } else {
@@ -20,70 +19,29 @@ window.addEventListener('load', () => {
         }).then((resolve) => {
             loadQuestions();
         }).catch((reject) => {
-            console.log("error occured!")
+            console.log("error occured!");
         }) 
     }
 });
-//questions received from 
-const questions = {
-    title: "Amazing quiz",
-    quiz: [
-        {
-            question: "What's the largest planet in solar system?",
-            answers: [
-                "variant 1",
-                "variant 2",
-            ]
-        },
-        {
-            question: "Why Mars has red color?",
-            answers: [
-                "variant 1",
-                "variant 2",
-                "variant 3",
-                "variant 2",
-                "variant 3"
-            ]
-        },
-        {
-            question: "Почему бебра сладкая???",
-            answers: [
-                "variant 1",
-                "variant 2",
-                "variant 3"
-            ]
-        },
-        {
-            question: "What's the largest planet in solar system?",
-            answers: [
-                "variant 1",
-                "variant 2",
-            ]
-        },
-        {
-            question: "What's the largest planet in solar system?",
-            answers: [
-                "variant 1",
-                "variant 2",
-            ]
-        },
-    ]
-}
+
+
 //popup 
 function login(callback) {
     document.querySelector(".login_popup").style.display = "grid";
-    name.addEventListener('click', (event) => {
+    enter_nick.addEventListener('click', (event) => {
+        event.preventDefault();
         if (!userField.value.replace(/\s/g, "").length) {
             alert('Введите имя пользователя!');
         } else {
             data.studentName = userField.value;
             document.querySelector(".login_popup").style.display = "none";
-            // document.querySelector(".main").style.display = "block";
+            document.querySelector(".main").style.display = "block";
             localStorage.setItem("login", userField.value);
             callback();
         }
     })
 }
+
 //add quiz item
 function AddQuiz(obj, node) {
     let count = 1;
@@ -113,22 +71,30 @@ function AddQuiz(obj, node) {
                 data.answers[event.target.closest(".quiz_item").getAttribute("q")] =
                 event.target.innerHTML;
             }
-            console.log(data)
+            // console.log(data);
         })
     })
 }
+
 function loadQuestions() {
     //server available -> fetch Promise instead of ordinary Promise 
     return new Promise((resolve, reject) => {
         //RECEIVE DATA FROM SERVER
-        setTimeout(() => {
-            return resolve(questions)
-        }, 2000)
+        let resp = JSON.stringify({'type': 'getData'})
+        let req = new XMLHttpRequest();
+        req.open("POST", window.location.href, true);
+        req.send(resp);
+        req.onload = () => {
+            if (req.readyState === 4 && req.status === 200) {
+                let data = JSON.parse(req.response);
+                console.log(data);
+                return resolve(data);
+            }
+        }
     }).then((resolve) => {
         const field = document.querySelector(".quiz_items");
         console.log("adding questions");
-        //now add quiz field to the page
-        AddQuiz(resolve, field);
+        AddQuiz(resolve, field); //now add quiz field to the page
     }).catch((err) => {
         console.log("data wasn't reveived!!!")
     })
@@ -138,10 +104,28 @@ function loadQuestions() {
 const sendBtn = document.querySelector(".quiz_send");
 sendBtn.addEventListener("click", (event) => {
     if (Object.keys(data.answers).length == document.querySelectorAll(".quiz_item").length) {
-        //fetch function to send data to server
-        console.log('success')
+        // fetch function to send data to server
+        let resp = JSON.stringify({'type': 'sendData', data});
+        let req = new XMLHttpRequest();
+        req.open("POST", window.location.href, true);
+        req.send(resp);
+        req.onload = () => {
+            if (req.readyState === 4 && req.status === 200) {
+                let resp1 = JSON.parse(req.response);
+                console.log(resp1);
+            }
+        }
+        console.log(data);
+        console.log('success');
+        alert('Спасибо, ваш ответ записан!');
+        logout();
     } else {
-        //maybe show popUp that you haven't entered answers 
-        console.log("denied")
+        console.log("denied");
+        alert('Вы ответили не на все вопросы!')
     }
-})
+});
+
+function logout() {
+    localStorage.removeItem('login');
+    location.reload();
+}
