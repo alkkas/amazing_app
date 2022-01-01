@@ -35,7 +35,7 @@ function login(callback) {
         } else {
             data.studentName = userField.value;
             document.querySelector(".login_popup").style.display = "none";
-            document.querySelector(".main").style.display = "block";
+            // document.querySelector(".main").style.display = "block";
             localStorage.setItem("login", userField.value);
             callback();
         }
@@ -80,7 +80,7 @@ function loadQuestions() {
     //server available -> fetch Promise instead of ordinary Promise 
     return new Promise((resolve, reject) => {
         //RECEIVE DATA FROM SERVER
-        let resp = JSON.stringify({'type': 'getData'})
+        let resp = JSON.stringify({'type': 'readFromDB'});
         let req = new XMLHttpRequest();
         req.open("POST", window.location.href, true);
         req.send(resp);
@@ -88,6 +88,7 @@ function loadQuestions() {
             if (req.readyState === 4 && req.status === 200) {
                 let data = JSON.parse(req.response);
                 console.log(data);
+                document.querySelector(".main").style.display = "block";
                 return resolve(data);
             }
         }
@@ -105,7 +106,7 @@ const sendBtn = document.querySelector(".quiz_send");
 sendBtn.addEventListener("click", (event) => {
     if (Object.keys(data.answers).length == document.querySelectorAll(".quiz_item").length) {
         // fetch function to send data to server
-        let resp = JSON.stringify({'type': 'sendData', data});
+        let resp = JSON.stringify({'type': 'writeToDB', data});
         let req = new XMLHttpRequest();
         req.open("POST", window.location.href, true);
         req.send(resp);
@@ -127,5 +128,6 @@ sendBtn.addEventListener("click", (event) => {
 
 function logout() {
     localStorage.removeItem('login');
-    location.reload();
+    // location.reload();
+    document.location.href = '/';
 }

@@ -12,6 +12,11 @@ function logout_click() {
 }
 
 function send_to_server(url, data) {
+    for (let el in data['quizes']) {
+        delete data['quizes'][el].qrcode;
+        delete data['quizes'][el].sixdigitcode;
+    } // удаляю инфу по квизу, тк она уже есть в бд
+
     d = {'type': 'quizies', 'name': data.name, 'data': data}
 
     let req = new XMLHttpRequest();
@@ -25,7 +30,7 @@ function send_to_server(url, data) {
     }
 }
 
-function quizSendler(username, quizname, currentUser) {
+function startQuiz(username, quizname, currentUser) {
     d = {'type': 'startQuiz', 'username': username, 'quizname': quizname}
     let req = new XMLHttpRequest();
     req.open("POST", '/avenue', true);
@@ -50,7 +55,6 @@ function quizSendler(username, quizname, currentUser) {
         }
     }
 }
-
 function endQuiz(username, quizname) {
     let user = parseUser();
     for (let el in user.quizes) {
@@ -143,7 +147,7 @@ function ListenBtns() {
             // старт квиза
             st_btn.addEventListener('click', () => {
                 console.log('quiz starting');
-                quizSendler(localStorage.getItem('username'), currentUser.title, currentUser);
+                startQuiz(localStorage.getItem('username'), currentUser.title, currentUser);
                 document.querySelector('.qr_data').style = 'display: block';
                 st_btn.style = 'display: none';
                 nd_btn.style = 'display: block';
@@ -358,7 +362,7 @@ function ListenBtns() {
             })
         })
     })
-    
+
     //таблица с результатами 
     const statistic = document.querySelector(".statistic_wrapper");
     document.querySelectorAll(".task_statistics").forEach(i => {
@@ -437,12 +441,27 @@ function login(resolve, reject) {
                         enterPageBlock.style.display = "none";
                         mainPartBlock.style.display = "block";
                         
-                        // здесь был let user
-                        console.log(ch_exist['data']);
-                        console.log(typeof ch_exist['data']);
+                        // console.log(ch_exist['data']);
                         let data_from_db = JSON.parse(ch_exist['data']);
+                        // вот эта штука короче нужна, для появления активных квизов при заходе с другого устройства
+                        console.log(data_from_db);
+                        if (ch_exist['quizzes_data'] != 'None') {
+                            let putQuiz = ch_exist['quizzes_data'];
+                            console.log(putQuiz)
+                            for (let dbi in data_from_db['quizes']) {
+                                let q_title = data_from_db['quizes'][dbi].title;
+                                
+                                for (let el in putQuiz) {
+                                    console.log(q_title, putQuiz[el].quizname)
+                                    if (q_title == putQuiz[el].quizname) {
+                                        data_from_db['quizes'][dbi].qrcode = putQuiz[el].link_to_qr;
+                                        data_from_db['quizes'][dbi].sixdigitcode = putQuiz[el].six_digit_code;
+                                    }
+                                }
+                            }
+                        }
+                        console.log(data_from_db);
                         setUser(data_from_db);
-                        // localStorage.setItem("user", JSON.stringify(data_from_db));
                         resolve(data_from_db);
                     } else {
                         alert("Неверный логин или пароль!");
@@ -479,6 +498,7 @@ window.addEventListener("load", () => {
 
 //создать опрос, занести его в бд и отправить на сервер
 //СЛАВА Я ПИШУ ПО РУССКИ Я ЛЮБЛЮ НЮХАТЬ БЕБРУ
+// чел, ты лучший [by xamelllion]
 
 const createTaskField = document.querySelector(".create_task_title");
 const createTaskBtn = document.querySelector(".create_task");
@@ -507,4 +527,4 @@ createTaskBtn.addEventListener("click", (event) => {
 })
 
 //а тут я уже буду делать проверку на кр коды погнали
-// сделал где-то сверху [xamelllion]
+// сделал где-то сверху [by xamelllion]
