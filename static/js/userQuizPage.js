@@ -67,7 +67,7 @@ function AddQuiz(obj, node) {
                 item.querySelectorAll(".quiz_answer").forEach((elem) => {
                     elem.classList.remove("active");
                 })
-                event.target.classList.add("active")
+                event.target.classList.add("active");
                 data.answers[event.target.closest(".quiz_item").getAttribute("q")] =
                 event.target.innerHTML;
             }
@@ -106,6 +106,16 @@ const sendBtn = document.querySelector(".quiz_send");
 sendBtn.addEventListener("click", (event) => {
     if (Object.keys(data.answers).length == document.querySelectorAll(".quiz_item").length) {
         // fetch function to send data to server
+        // sort answers
+        const ordered = Object.keys(data.answers).sort().reduce(
+            (obj, key) => { 
+              obj[key] = data.answers[key]; 
+              return obj;
+            }, 
+            {}
+          );
+        data.answers = ordered;
+        console.log(data);
         let resp = JSON.stringify({'type': 'writeToDB', data});
         let req = new XMLHttpRequest();
         req.open("POST", window.location.href, true);
@@ -116,7 +126,6 @@ sendBtn.addEventListener("click", (event) => {
                 console.log(resp1);
             }
         }
-        console.log(data);
         console.log('success');
         alert('Спасибо, ваш ответ записан!');
         logout();
@@ -128,6 +137,6 @@ sendBtn.addEventListener("click", (event) => {
 
 function logout() {
     localStorage.removeItem('login');
-    // location.reload();
-    document.location.href = '/';
+    location.reload();
+    // document.location.href = '/';
 }

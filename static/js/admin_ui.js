@@ -236,6 +236,7 @@ function ListenBtns() {
             disableScroll();
         });
     });
+
     //редактор опросников 
     //ЭТО ПИЗДЕЦ
     const editWrapper = document.querySelector(".edit_pop_up");
@@ -422,51 +423,73 @@ function ListenBtns() {
                 enableScroll();
                 document.body.style.overflow = "auto";
                 location.reload();
-            })
-        })
-    })
+            });
+        });
+    });
 
     //таблица с результатами 
     const statistic = document.querySelector(".statistic_wrapper");
     document.querySelectorAll(".task_statistics").forEach(i => {
         i.addEventListener("click", elem => {
-            // statistic.classList.add('active');
-            // document.body.style.overflow = "hidden";
+            // подгружаю статистику
             let quiz = parseUser().quizes[i.closest(".task_item").getAttribute("index")];
-            // document.querySelector(".statistic_title").innerHTML = quiz.title;
-            if (quiz?.students) {
-                statistic.classList.add('active');
-                document.body.style.overflow = "hidden";
-                document.querySelector(".statistic_title").innerHTML = quiz.title;
 
-                let field = document.querySelector(".table_content");
-                let header = document.querySelector(".statistic_headers");
-                field.innerHTML = "";
-                header.innerHTML = "<th>Имя</th>";
-                for(let i of quiz.quiz) {
-                    header.innerHTML += `
-                    <th class="table_question_title">${i.question}</th>
-                    `
-                }
-                for (let i of quiz.students) {
-                    let content = "";
-                    let name = "";
-                    
-                    name = `<th>${i.studentName}</th>`
-                   for (let elem of Object.values(i.answers)) {
-                       content  += `<td>${elem}</td>`;
-                   }
-                   field.innerHTML += `<tr >
-                   ${name + content}
-                   </tr >
-                   `;
-                }
+            // getStatistic(localStorage.getItem('username'), quiz.title);
+            d = {'type': 'getStatistics', 'username': localStorage.getItem('username'), 'quiz_name': quiz.title}
 
-            } else {
-                alert("Нет информации по опросу!")
+            let req = new XMLHttpRequest();
+            req.open("POST", '/avenue', true);
+            console.log(JSON.stringify(d))
+            req.send(JSON.stringify(d));
+            req.onload = () => {
+                if (req.readyState === 4 && req.status === 200) {
+                    let dataFromServer = JSON.parse(req.response);
+                    let students = dataFromServer['statistics_data'];
+                    if (students == 'None') {
+                        alert("Нет информации по опросу!");
+                        return;
+                    }
+                    let students_arr = []
+                    console.log(students);
+                    students.forEach((item, i, students) => {
+                        students_arr.push(JSON.parse(students[i].value));
+                        console.log(students[i].value);
+                    });
+                    console.log(students_arr);
+
+
+                    statistic.classList.add('active');
+                    document.body.style.overflow = "hidden";
+                    document.querySelector(".statistic_title").innerHTML = quiz.title;
+
+                    let field = document.querySelector(".table_content");
+                    let header = document.querySelector(".statistic_headers");
+                    field.innerHTML = "";
+                    header.innerHTML = "<th>Имя</th>";
+                    for(let i of quiz.quiz) {
+                        header.innerHTML += `
+                        <th class="table_question_title">${i.question}</th>
+                        `
+                    }
+                    for (let i of students_arr) {
+                        let content = "";
+                        let name = "";
+                        
+                        name = `<th>${i.studentName}</th>`
+                        for (let elem of Object.values(i.answers)) {
+                            content  += `<td>${elem}</td>`;
+                        }
+                        field.innerHTML += `<tr >
+                        ${name + content}
+                        </tr >
+                        `;
+                    }
+
+                }
             }
-        })
-    })
+            
+        });
+    });
 }
 
 function parseUser() {
@@ -561,7 +584,7 @@ window.addEventListener("load", () => {
 
 //создать опрос, занести его в бд и отправить на сервер
 //СЛАВА Я ПИШУ ПО РУССКИ Я ЛЮБЛЮ НЮХАТЬ БЕБРУ
-// чел, ты лучший [by xamelllion]
+// чел, ты лучший
 
 const createTaskField = document.querySelector(".create_task_title");
 const createTaskBtn = document.querySelector(".create_task");

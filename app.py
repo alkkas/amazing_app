@@ -126,6 +126,7 @@ def data_worker():
         try:
             linkToQr = db_funcs.getQuizQr(db, username, quizname)
             db_funcs.updateQuizData(db, username, quizname)
+            db_funcs.deleteUnusedStatistics(db, username, quizname)
         except (pymysql.err.InternalError, pymysql.err.InterfaceError, AttributeError):
             print('endQuiz - иди нахуй')
 
@@ -139,6 +140,9 @@ def data_worker():
 
         # update data field in db, and - DONE
         # dong something with statistics
+    if data['type'] == 'getStatistics':
+        statistics_data = db_funcs.getCurrentStatistics(db, data['username'], data['quiz_name'])
+        return json.dumps({"statistics_data": statistics_data})
 
 
 if __name__ == '__main__':

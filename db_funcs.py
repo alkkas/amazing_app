@@ -1,5 +1,5 @@
 from pymysql.converters import escape_string
-
+import json
 
 # проверка аккаунта админа для последующего входа
 def check_if_user_exists(db, data):
@@ -16,8 +16,8 @@ def check_if_user_exists(db, data):
 # записывает в бд обновлённые данные по квизам
 def quiz_updater(db, username, data):
     cursor = db.cursor()
-    a = str(data).replace('\'', '\"')
-    cmd = f''' UPDATE main_table SET data = "{escape_string(a)}" WHERE name = "{username}"; '''
+    # a = str(data).replace('\'', '\"')
+    cmd = f''' UPDATE main_table SET data = "{escape_string(json.dumps(data, ensure_ascii=False))}" WHERE name = "{username}"; '''
     cursor.execute(cmd)
     db.commit()
 
@@ -42,10 +42,6 @@ def insertQuizData(db, username, quizname, quiz_link, link_to_qr, six_digit_code
 
 def updateQuizData(db, username, quizname):
     cursor = db.cursor()
-    # cmd = f'''
-    #     UPDATE data SET quiz_link="", link_to_qr="", six_digit_code=""
-    #     WHERE username = "{username}" AND quizname = "{quizname}";
-    # '''
     cmd = f'''
         DELETE FROM data
         WHERE username = "{username}" AND quizname = "{quizname}";
@@ -98,7 +94,7 @@ def writeDataToStatistic(db, owner_name, quiz_name, student_name, value):
     cursor = db.cursor()
     cmd = f'''
         INSERT INTO quiz_statistics (owner_name, quiz_name, student_name, value)
-        VALUES ("{owner_name}", "{quiz_name}", "{student_name}", "{value}");
+        VALUES ("{owner_name}", "{quiz_name}", "{student_name}", "{escape_string(json.dumps(value, ensure_ascii=False))}");
     '''
     # print(cmd)
     cursor.execute(cmd)
@@ -116,3 +112,25 @@ def getCurrentQuizzes(db, owner_name):
     if len(data) == 0:
         return 'None'
     return data
+
+def getCurrentStatistics(db, owner_name, quizname):
+    cursor = db.cursor()
+    cmd = f'''
+        SELECT value FROM quiz_statistics
+        WHERE owner_name = "{owner_name}" AND quiz_name = "{quizname}";
+    '''
+    cursor.execute(cmd)
+    data = cursor.fetchall()
+    if len(data) == 0:
+        return 'None'
+    return data
+
+def deleteUnusedStatistics(db, owner_name, quizname):
+    cursor = db.cursor()
+    cmd = f'''
+        DELETE FROM quiz_statistics
+        WHERE owner_name = "{owner_name}" AND quiz_name = "{quizname}";
+    '''
+    # print(cmd)
+    cursor.execute(cmd)
+    db.commit()
