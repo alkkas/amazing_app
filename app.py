@@ -96,7 +96,10 @@ def data_worker():
 
     if data['type'] == 'quizies':
         # write it to db
-        db_funcs.quiz_updater(db, data['name'], data['data'])
+        try:
+            db_funcs.quiz_updater(db, data['name'], data['data'])
+        except (pymysql.err.InternalError, pymysql.err.InterfaceError):
+            print('запись в бд - иди нахуй')
         return json.dumps({"hello": "world"})
     
     if data['type'] == 'startQuiz':
@@ -112,7 +115,7 @@ def data_worker():
         pathToImgQr = extends.genQr(linkToQuiz, linkCode+'.png')
         try:
             db_funcs.insertQuizData(db, username, quizname, linkToQuiz, pathToImgQr, sixDigitCode, linkCode)
-        except (pymysql.err.InternalError, pymysql.err.InterfaceError):
+        except (pymysql.err.InternalError, pymysql.err.InterfaceError, AttributeError):
             print('startQuiz - иди нахуй')
         return json.dumps({"sixdigitcode": sixDigitCode, "pathtoimg": pathToImgQr})
     
@@ -120,14 +123,12 @@ def data_worker():
         print('--- END QUIZ ---')
         username = data['username']
         quizname = data['quizname']
-        # db_funcs.quiz_updater(db, username, data['data'])
         try:
             linkToQr = db_funcs.getQuizQr(db, username, quizname)
             db_funcs.updateQuizData(db, username, quizname)
-        except (pymysql.err.InternalError, pymysql.err.InterfaceError):
+        except (pymysql.err.InternalError, pymysql.err.InterfaceError, AttributeError):
             print('endQuiz - иди нахуй')
 
-        print('-'*20, linkToQr)
         try:
             path = os.path.join(os.path.abspath(os.path.dirname(__file__)), linkToQr.replace('/', '\\'))
             os.remove(path)

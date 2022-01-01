@@ -30,7 +30,22 @@ function send_to_server(url, data) {
     }
 }
 
-function startQuiz(username, quizname, currentUser) {
+function startQuiz(username, quizname) {
+    let user = parseUser();
+    for (let el in user.quizes) {
+        if (user.quizes[el].title === quizname) {
+            console.log(user.quizes[el].qrcode)
+            if (user.quizes[el].qrcode == 'in_develop' || user.quizes[el].qrcode != undefined) {
+                console.log('done');
+                return;
+            } else {
+                user.quizes[el].qrcode = 'in_develop';
+            }
+            
+        }
+    }
+    setUser(user);
+
     d = {'type': 'startQuiz', 'username': username, 'quizname': quizname}
     let req = new XMLHttpRequest();
     req.open("POST", '/avenue', true);
@@ -51,7 +66,6 @@ function startQuiz(username, quizname, currentUser) {
                 }
             }
             setUser(user);
-            // send_to_server('/avenue', user);
         }
     }
 }
@@ -59,23 +73,35 @@ function endQuiz(username, quizname) {
     let user = parseUser();
     for (let el in user.quizes) {
         if (user.quizes[el].title === quizname) {
-            console.log(user.quizes[el])
-            delete user.quizes[el].qrcode;
-            delete user.quizes[el].sixdigitcode;
+            console.log('---', user.quizes[el].qrcode);
+            if (user.quizes[el].qrcode === undefined){
+                console.log('done');
+                return;
+            } else {
+                for (let el in user.quizes) {
+                    if (user.quizes[el].title === quizname) {
+                        console.log(user.quizes[el])
+                        delete user.quizes[el].qrcode;
+                        delete user.quizes[el].sixdigitcode;
+                    }
+                }
+                setUser(user);
+            
+                // d = {'type': 'endQuiz', 'username': username, 'quizname': quizname, 'data': user}
+                d = {'type': 'endQuiz', 'username': username, 'quizname': quizname}
+                let req = new XMLHttpRequest();
+                req.open("POST", '/avenue', true);
+                req.send(JSON.stringify(d));
+                req.onload = () => {
+                    if (req.readyState === 4 && req.status === 200) {
+                        let dataFromServer = JSON.parse(req.response);
+                    }
+                }
+            }
         }
     }
-    setUser(user);
 
-    // d = {'type': 'endQuiz', 'username': username, 'quizname': quizname, 'data': user}
-    d = {'type': 'endQuiz', 'username': username, 'quizname': quizname}
-    let req = new XMLHttpRequest();
-    req.open("POST", '/avenue', true);
-    req.send(JSON.stringify(d));
-    req.onload = () => {
-        if (req.readyState === 4 && req.status === 200) {
-            let dataFromServer = JSON.parse(req.response);
-        }
-    }
+    
 }
 
 function showQuizes(node, arr) {
@@ -110,6 +136,30 @@ function enableScroll() {
     window.onscroll = function() {};
 }
 
+let st_btn = document.querySelector('.st_quiz_btn');
+let nd_btn = document.querySelector('.nd_quiz_btn');
+// завершение квиза
+nd_btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    let currentTitle = document.querySelector('.qr_code_popup_title').innerHTML;
+    console.log('endQuiz');
+    document.querySelector('.qr_data').style = 'display: none';
+    st_btn.style = 'display: block';
+    nd_btn.style = 'display: none';
+    endQuiz(localStorage.getItem('username'), currentTitle);
+});
+// старт квиза
+st_btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    let currentTitle = document.querySelector('.qr_code_popup_title').innerHTML;
+    console.log('startQuiz');
+    startQuiz(localStorage.getItem('username'), currentTitle);
+    document.querySelector('.qr_data').style = 'display: block';
+    st_btn.style = 'display: none';
+    nd_btn.style = 'display: block';
+});
 
 //слушаю кнопочки каждый раз когда добавляю новые штуки, штобы залетали братки в массив
 function ListenBtns() {
@@ -130,28 +180,40 @@ function ListenBtns() {
     const qrCodeWrapper = document.querySelector(".qr_code_popup_wrapper");
     document.querySelectorAll(".task_qr").forEach((i) => {
         i.addEventListener("click", (item) => {
-            let st_btn = document.querySelector('.st_quiz_btn');
-            let nd_btn = document.querySelector('.nd_quiz_btn');
+            // item.stopPropagation();
+            // item.preventDefault();
+            // let st_btn = document.querySelector('.st_quiz_btn');
+            // let nd_btn = document.querySelector('.nd_quiz_btn');
+
             // при нажатии я проверю есть ли кр код, если нет то нужно сделать функцию для его созданя
             // и кнопку еще для этого, пока не сделал
             let currentUser = parseUser().quizes[i.closest(".task_item").getAttribute("index")];
 
-            // завершение квиза
-            nd_btn.addEventListener('click', () => {
-                document.querySelector('.qr_data').style = 'display: none';
-                st_btn.style = 'display: block';
-                nd_btn.style = 'display: none';
-                endQuiz(localStorage.getItem('username'), currentUser.title);
-            }, {once:true});
+            // // завершение квиза
+            // nd_btn.addEventListener('click', (e) => {
+            //     e.stopPropagation();
+            //     e.preventDefault();
+            //     let currentTitle = document.querySelector('.qr_code_popup_title').innerHTML;
+            //     console.log('endQuiz');
+            //     document.querySelector('.qr_data').style = 'display: none';
+            //     st_btn.style = 'display: block';
+            //     nd_btn.style = 'display: none';
+            //     endQuiz(localStorage.getItem('username'), currentTitle);
+            //     console.log('--- END - ',currentUser.title)
+            // }, {once:true});
 
-            // старт квиза
-            st_btn.addEventListener('click', () => {
-                console.log('quiz starting');
-                startQuiz(localStorage.getItem('username'), currentUser.title, currentUser);
-                document.querySelector('.qr_data').style = 'display: block';
-                st_btn.style = 'display: none';
-                nd_btn.style = 'display: block';
-            }, {once:true});
+            // // старт квиза
+            // st_btn.addEventListener('click', (e) => {
+            //     e.stopPropagation();
+            //     e.preventDefault();
+            //     let currentTitle = document.querySelector('.qr_code_popup_title').innerHTML;
+            //     console.log('quiz starting', currentTitle);
+            //     startQuiz(localStorage.getItem('username'), currentTitle);
+            //     console.log('--- START - ',currentUser.title)
+            //     document.querySelector('.qr_data').style = 'display: block';
+            //     st_btn.style = 'display: none';
+            //     nd_btn.style = 'display: block';
+            // }, {once:true});
 
             if (currentUser.qrcode) {
                 console.log("qrcode exist");
@@ -335,7 +397,8 @@ function ListenBtns() {
 
                     // и тут я отправлю вам ребята файл с юзером
                     send_to_server('/avenue', user);
-                    alert("Сохранено!")
+                    location.reload(); // чтоб не баговало
+                    // alert("Сохранено!");
                 }
 
             })
@@ -358,7 +421,7 @@ function ListenBtns() {
                 document.querySelector(".add_question").replaceWith(document.querySelector(".add_question").cloneNode(true));
                 enableScroll();
                 document.body.style.overflow = "auto";
-
+                location.reload();
             })
         })
     })

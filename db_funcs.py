@@ -27,7 +27,6 @@ def quizies_getter(db, username):
     cmd = f'''SELECT data FROM main_table WHERE name = "{username}";'''
     cursor.execute(cmd)
     data = cursor.fetchone()
-    print(type(data), data)
     return data['data']
 
 # записывает данные по созданному квизу в БД
@@ -37,7 +36,7 @@ def insertQuizData(db, username, quizname, quiz_link, link_to_qr, six_digit_code
         INSERT INTO data (username, quizname, quiz_link, link_to_qr, six_digit_code, twelve_digit_code)
         VALUES ("{username}", "{quizname}", "{quiz_link}", "{link_to_qr}", "{six_digit_code}", "{twelve_digit_code}");
     '''
-    print(cmd)
+    # print(cmd)
     cursor.execute(cmd)
     db.commit()
 
@@ -51,7 +50,7 @@ def updateQuizData(db, username, quizname):
         DELETE FROM data
         WHERE username = "{username}" AND quizname = "{quizname}";
     '''
-    print(cmd)
+    # print(cmd)
     cursor.execute(cmd)
     db.commit()
 
@@ -63,7 +62,7 @@ def getQuizQr(db, username, quizname):
     '''
     cursor.execute(cmd)
     data = cursor.fetchone()
-    print(data)
+    # print(data)
     return data['link_to_qr']
 
 def getQuizLink(db, username, quizname):
@@ -101,7 +100,7 @@ def writeDataToStatistic(db, owner_name, quiz_name, student_name, value):
         INSERT INTO quiz_statistics (owner_name, quiz_name, student_name, value)
         VALUES ("{owner_name}", "{quiz_name}", "{student_name}", "{value}");
     '''
-    print(cmd)
+    # print(cmd)
     cursor.execute(cmd)
     db.commit()
 
