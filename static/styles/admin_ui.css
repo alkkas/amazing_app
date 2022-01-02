@@ -13,6 +13,8 @@
   font-size: 16px;
   color: #fff;
   box-sizing: border-box;
+  -webkit-appearance: none;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 *:focus {
   outline: 1px solid #e8eef1;
@@ -23,11 +25,11 @@ body {
 
 .container {
   margin: 0 auto;
+  padding: 0 35px;
   max-width: 1000px;
-  height: 100%;
+  /* height: 100%; */
 }
 .hello {
-  /* margin-top: 30px; */
   color: #e8eef1;
   font-size: 32px;
 }
@@ -46,6 +48,10 @@ body {
   padding-left: 7px;
   box-shadow: 7px 7px 24px -1px rgba(0, 0, 0, 0.3);
   height: 40px;
+  width: 100%;
+
+  border-radius: 5px;
+  padding: 10px;
 }
 .create_task_title::placeholder {
   color: #e8eef1;
@@ -162,22 +168,29 @@ body {
 }
 .top_block {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* display: grid;
+  grid-template-columns: 3fr 1fr; */
   margin: 30px 0;
   background-color: #057dcd;
   padding: 15px;
+}
+.top_block_input_div {
+  width: 85%;
+}
+.top_block_button {
+  margin-left: 10px;
 }
 .create_task {
   border-radius: 5px;
   background: #d45b67;
   border: 0;
-  padding: 5px;
-
+  padding: 0 5px;
+  height: 40px;
   box-shadow: 7px 7px 24px -1px rgb(0 0 0 / 30%);
 }
-.create_task_title {
-  border-radius: 5px;
-  padding: 10px;
-}
+
 /*pop ups*/
 /*QR CODE*/
 .qr_code_popup_wrapper,
@@ -249,6 +262,11 @@ body {
 }
 .qr_data {
   display: none;
+  /* align-items: center; */
+}
+.qr_block {
+  display: flex;
+  justify-content:  center;
 }
 .quiz_start_end {
   margin-top: 20px;
@@ -280,20 +298,6 @@ body {
   transition: 0.3s;
   border: 1px solid #fff;
 }
-
-/* .logout_btn {
-  background: #d45b67;
-  outline: none;
-  border: 1px solid #d45b67;
-
-  border-radius: 5px;
-  padding: 5px;
-  transition: 0.3s;
-}
-.logout_btn:hover {
-  transition: 0.3s;
-  border: 1px solid #fff;
-} */
 
 /*EDIT POP UP*/
 .edit_pop_up {
@@ -415,6 +419,7 @@ body {
   display: grid;
   justify-content: center;
   align-content: center;
+  display: none;
 }
 .input_login_field {
   font-size: 16px;
@@ -502,9 +507,69 @@ body {
   font-weight: 400;
 }
 
-@media (max-width: 767px) {
+
+
+/* для планшетов */
+@media(max-width: 992px) {
+  .container {
+    max-width: 768px;
+    padding: 0 35px;
+  }
+}
+
+/* для мобил */
+@media(max-width: 767px) {
   .container {
     max-width: none;
     padding: 0 16px;
+  }
+  .hello {
+    font-size: 24px;
+  }
+  .create_task_title {
+    font-size: 16px;
+  }
+  .qr_code_popup {
+    max-width: 300px;
+    max-height: 550px;
+  }
+  .qr_code_popup_img {
+    width: 220px;
+  }
+  .edit_pop_up_container,
+  .statistic {
+    max-width: 900px;
+    min-height: 100%;
+    margin: 30px auto 0;
+    border-radius: 0;
+    padding: 15px;
+  }
+  .edit_pop_up_input_wrapper,
+  .edit_pop_up_question_wrapper {
+      width: 100%;
+  }
+  .edit_pop_up_question {
+    font-size: 16px;
+    padding: 10px 15px;
+  }
+  .edit_pop_up_field {
+    margin: 5px 10px 5px 0;
+    font-size: 14px;
+  }
+  .edit_pop_up_q_fields {
+    margin: 5px 0 0 60px;
+  }
+  .add_field {
+    margin: 10px 28px 0 60px;
+  }
+  .add_question {
+    width: 100%;
+  }
+  .add_question_btn_div {
+    margin-right: 28px;
+  }
+
+  .statistic_table_wrapper {
+    overflow-x: scroll;
   }
 }

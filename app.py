@@ -55,7 +55,7 @@ def quiz_func(twelveDigitCode):
         if data['type'] == 'readFromDB':
             try:       
                 quizname, username = db_funcs.getDataByCode(db, twelveDigitCode, 12)
-                allQuizData = db_funcs.quizies_getter(db, username)
+                allQuizData = db_funcs.getQuizzesFromDB(db, username)
             except (pymysql.err.InternalError, pymysql.err.InterfaceError):
                 print('DB error')
             
@@ -88,16 +88,19 @@ def data_worker():
     data = request.get_json(force=True)
 
     if data['type'] == 'check_log':
-        is_exist = db_funcs.check_if_user_exists(db, data)
+        is_exist = db_funcs.isUserExist(db, data['username'], data['password'])
+        print(data['username'], data['password'], is_exist)
         if is_exist:
-            data_from_db = db_funcs.quizies_getter(db, data['username'])
+            data_from_db = db_funcs.getQuizzesFromDB(db, data['username'])
             quizzes_data = db_funcs.getCurrentQuizzes(db, data['username'])
-        return json.dumps({"is_exist": is_exist, "data": str(data_from_db), "quizzes_data": quizzes_data})
+            return json.dumps({"is_exist": is_exist, "data": str(data_from_db), "quizzes_data": quizzes_data})
+        return json.dumps({"is_exist": is_exist})
+        
 
     if data['type'] == 'quizies':
-        # write it to db
+        print(data)
         try:
-            db_funcs.quiz_updater(db, data['name'], data['data'])
+            db_funcs.updateUserQuizzes(db, data['name'], data['data'])
         except (pymysql.err.InternalError, pymysql.err.InterfaceError):
             print('запись в бд - иди нахуй')
         return json.dumps({"hello": "world"})

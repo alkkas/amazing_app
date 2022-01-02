@@ -8,6 +8,7 @@ mainPartBlock.style.display = "none";
 
 function logout_click() {
     localStorage.removeItem('user');
+    localStorage.removeItem('username');
     location.reload();
 }
 
@@ -31,21 +32,20 @@ function send_to_server(url, data) {
 }
 
 function startQuiz(username, quizname) {
-    let user = parseUser();
-    for (let el in user.quizes) {
-        if (user.quizes[el].title === quizname) {
-            console.log(user.quizes[el].qrcode)
-            if (user.quizes[el].qrcode == 'in_develop' || user.quizes[el].qrcode != undefined) {
-                console.log('done');
-                return;
-            } else {
-                user.quizes[el].qrcode = 'in_develop';
-            }
+    // let user = parseUser();
+    // for (let el in user.quizes) {
+    //     if (user.quizes[el].title === quizname) {
+    //         console.log(user.quizes[el].qrcode)
+    //         if (user.quizes[el].qrcode == 'in_develop' || user.quizes[el].qrcode != undefined) {
+    //             console.log('done');
+    //             return;
+    //         } else {
+    //             user.quizes[el].qrcode = 'in_develop';
+    //         }
             
-        }
-    }
-    setUser(user);
-
+    //     }
+    // }
+    // setUser(user);
     d = {'type': 'startQuiz', 'username': username, 'quizname': quizname}
     let req = new XMLHttpRequest();
     req.open("POST", '/avenue', true);
@@ -73,31 +73,20 @@ function endQuiz(username, quizname) {
     let user = parseUser();
     for (let el in user.quizes) {
         if (user.quizes[el].title === quizname) {
-            console.log('---', user.quizes[el].qrcode);
-            if (user.quizes[el].qrcode === undefined){
-                console.log('done');
-                return;
-            } else {
-                for (let el in user.quizes) {
-                    if (user.quizes[el].title === quizname) {
-                        console.log(user.quizes[el])
-                        delete user.quizes[el].qrcode;
-                        delete user.quizes[el].sixdigitcode;
-                    }
-                }
-                setUser(user);
-            
-                // d = {'type': 'endQuiz', 'username': username, 'quizname': quizname, 'data': user}
-                d = {'type': 'endQuiz', 'username': username, 'quizname': quizname}
-                let req = new XMLHttpRequest();
-                req.open("POST", '/avenue', true);
-                req.send(JSON.stringify(d));
-                req.onload = () => {
-                    if (req.readyState === 4 && req.status === 200) {
-                        let dataFromServer = JSON.parse(req.response);
-                    }
-                }
-            }
+            console.log(user.quizes[el])
+            delete user.quizes[el].qrcode;
+            delete user.quizes[el].sixdigitcode;
+        }
+    }
+    setUser(user);
+
+    d = {'type': 'endQuiz', 'username': username, 'quizname': quizname}
+    let req = new XMLHttpRequest();
+    req.open("POST", '/avenue', true);
+    req.send(JSON.stringify(d));
+    req.onload = () => {
+        if (req.readyState === 4 && req.status === 200) {
+            let dataFromServer = JSON.parse(req.response);
         }
     }
 
@@ -180,40 +169,7 @@ function ListenBtns() {
     const qrCodeWrapper = document.querySelector(".qr_code_popup_wrapper");
     document.querySelectorAll(".task_qr").forEach((i) => {
         i.addEventListener("click", (item) => {
-            // item.stopPropagation();
-            // item.preventDefault();
-            // let st_btn = document.querySelector('.st_quiz_btn');
-            // let nd_btn = document.querySelector('.nd_quiz_btn');
-
-            // при нажатии я проверю есть ли кр код, если нет то нужно сделать функцию для его созданя
-            // и кнопку еще для этого, пока не сделал
             let currentUser = parseUser().quizes[i.closest(".task_item").getAttribute("index")];
-
-            // // завершение квиза
-            // nd_btn.addEventListener('click', (e) => {
-            //     e.stopPropagation();
-            //     e.preventDefault();
-            //     let currentTitle = document.querySelector('.qr_code_popup_title').innerHTML;
-            //     console.log('endQuiz');
-            //     document.querySelector('.qr_data').style = 'display: none';
-            //     st_btn.style = 'display: block';
-            //     nd_btn.style = 'display: none';
-            //     endQuiz(localStorage.getItem('username'), currentTitle);
-            //     console.log('--- END - ',currentUser.title)
-            // }, {once:true});
-
-            // // старт квиза
-            // st_btn.addEventListener('click', (e) => {
-            //     e.stopPropagation();
-            //     e.preventDefault();
-            //     let currentTitle = document.querySelector('.qr_code_popup_title').innerHTML;
-            //     console.log('quiz starting', currentTitle);
-            //     startQuiz(localStorage.getItem('username'), currentTitle);
-            //     console.log('--- START - ',currentUser.title)
-            //     document.querySelector('.qr_data').style = 'display: block';
-            //     st_btn.style = 'display: none';
-            //     nd_btn.style = 'display: block';
-            // }, {once:true});
 
             if (currentUser.qrcode) {
                 console.log("qrcode exist");
@@ -513,7 +469,7 @@ function login(resolve, reject) {
             // Here I  will request user obj if all fileds were filed correctly 
             // but for now I assume that everything went good
             // [xmllln]: done
-            let data = JSON.stringify({"type": "check_log", "username": userName.value, "password": userPassword.value });
+            let data = JSON.stringify({"type": "check_log", "username": userName.value.toLowerCase(), "password": userPassword.value });
             let req = new XMLHttpRequest();
             req.open("POST", '/avenue', true);
             req.send(data);
@@ -523,7 +479,7 @@ function login(resolve, reject) {
 
                     if (ch_exist['is_exist'] == true) {
                         console.log('done login');
-                        localStorage.setItem("username", userName.value);
+                        localStorage.setItem("username", userName.value.toLowerCase());
                         enterPageBlock.style.display = "none";
                         mainPartBlock.style.display = "block";
                         
@@ -563,7 +519,7 @@ function login(resolve, reject) {
 }
 
 window.addEventListener("load", () => {
-    hello_label.textContent = `Здравствуйте, ${localStorage.getItem("username")} !`;
+    // hello_label.textContent = `Здравствуйте, ${localStorage.getItem("username")} !`;
     return new Promise((resolve, reject) => {
         if(!JSON.parse(localStorage.getItem("user")) && 
         !JSON.parse(localStorage.getItem("user"))) {
@@ -576,9 +532,11 @@ window.addEventListener("load", () => {
         }
     })
     .then((user) => {
+        enterPageBlock.style.display = "none";
+        hello_label.textContent = `Здравствуйте, ${localStorage.getItem("username")} !`;
         return showQuizes(document.querySelector(".tasks"), user.quizes.map(i => i.title))
     }).catch((err) => {
-        console.log("Login error")
+        console.log("Login error", err);
     })
 })
 

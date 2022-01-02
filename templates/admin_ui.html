@@ -87,37 +87,14 @@
             <h1 class="edit_pop_up_title">Title</h1>
 
             <div class="edit_pop_up_items ">
-                <!-- <div class="edit_pop_up_item"> 
-                    <div class="edit_pop_up_question_wrapper">
-                        <input type="text" class="edit_pop_up_question" placeholder="Введите вопрос">
-                        <img src="../static/images/trash.png" alt="delete" class="edit_pop_up_delete">
-                    </div>
-                    <div class="edit_pop_up_q_fields">
-                        <div class="edit_pop_up_input_wrapper">
-                            <input type="text" class="edit_pop_up_field" placeholder="введите ответ...">
-                            <img src="../static/images/trash.png" alt="delete" class="edit_pop_up_delete">
-                        </div>
-                        <div class="edit_pop_up_input_wrapper">
-                            <input type="text" class="edit_pop_up_field" placeholder="введите ответ...">
-                            <img src="../static/images/trash.png" alt="delete" class="edit_pop_up_delete">
-                        </div>
-                        <div class="edit_pop_up_input_wrapper">
-                            <input type="text" class="edit_pop_up_field" placeholder="введите ответ...">
-                            <img src="../static/images/trash.png" alt="delete" class="edit_pop_up_delete">
-                        </div>
-                        <div class="edit_pop_up_input_wrapper">
-                            <input type="text" class="edit_pop_up_field" placeholder="введите ответ...">
-                        </div>
-                        <div class="edit_pop_up_input_wrapper">
-                            <button class="add_field edit_pop_up_field " placeholder="введите ответ...">Добавить ответ
-                            <img src="/static/images/close.png" alt="add answer" class="add_field_btn">
-                        </div>
-                    </div>
-                </div> -->
+                
             </div>
-            <button class="edit_pop_up_question add_question">Добавить вопрос
-                <img src="/static/images/close.png" alt="add answer" class="add_field_btn">
-            </button>
+            <div class="add_question_btn_div">
+                <button class="edit_pop_up_question add_question">Добавить вопрос
+                    <img src="/static/images/close.png" alt="add answer" class="add_field_btn">
+                </button>
+            </div>
+            
             <div class="edit_pop_up_btns">
 
                 <button class="edit_pop_up_del">Удалить</button>
@@ -132,8 +109,10 @@
                 <button class="logout_btn" onclick="logout_click()">Выйти</button>
             </div>
             <div class="top_block">
-                <input type="text" class="create_task_title" placeholder="Введите название опроса:">
-                <button class="create_task">Создать новый опрос</button>
+                <div class="top_block_input_div"><input type="text" class="create_task_title" placeholder="Введите название опроса:"></div>
+                <div class="top_block_button"><button class="create_task">Новый опрос</button></div>
+                
+                
             </div>
             <h1 class="main_hr"></h1>
             <div class="tasks">
@@ -149,7 +128,6 @@
         </div>
 
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="/static/js/admin_ui.js"></script>
 </body>
 </html>

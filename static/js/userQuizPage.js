@@ -10,7 +10,7 @@ let data = {
 window.addEventListener('load', () => {
     if (localStorage.getItem("login")) {
         document.querySelector(".login_popup").style.display = "none";
-        document.querySelector(".main").style.display = "block";
+        // document.querySelector(".main").style.display = "block";
         data.studentName = localStorage.getItem("login");
         loadQuestions();
     } else {

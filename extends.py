@@ -2,6 +2,7 @@ import string
 import random
 import qrcode
 import os
+from hashlib import sha256
 
 def genSomeCode(num):
     st = string.ascii_lowercase+string.digits
@@ -16,3 +17,6 @@ def genQr(link, img_name): # function by Shotgan
     img = qrcode.make(link)
     img.save(pathToSave)
     return pathToSave
+
+def genHash(st):
+    return sha256(st.encode('utf-8')).hexdigest()

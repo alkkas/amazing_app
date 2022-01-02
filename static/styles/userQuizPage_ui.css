@@ -1,4 +1,11 @@
 /* MAIN SETTINGS */
+/*colors
+#057dcd;
+#43b0f1
+#1e3d58
+#e8eef1
+*/
+
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;1,400&display=swap");
 * {
   margin: 0;
@@ -11,14 +18,16 @@ body {
   background-color: #1e3d58;
 }
 .main {
-  min-width: 100vh;
+  /* min-height: 100vh; */
   display: none;
+  width: 100%;
 }
 .login_container {
   height: 100%;
 }
 .container {
   max-width: 1000px;
+  padding: 0 30px;
   margin: 0 auto;
 }
 .some_amazing_logo {
@@ -26,6 +35,9 @@ body {
   color: #e8eef1;
   font-weight: bold;
   font-size: 48px;
+}
+.header {
+  margin: 15px 0;
 }
 .login_popup {
   background: #1e3d58;
@@ -76,9 +88,8 @@ body {
 /*quize styes*/
 .quiz {
   border: 2px solid #057dcd;
-  margin-top: 20px;
-  margin-bottom: 30px;
-  padding: 15px;
+  margin: 20px 0 30px 0;
+  padding: 15px 15px 15px 30px;
   border-radius: 10px;
 }
 .quiz_item {
@@ -89,7 +100,7 @@ body {
   color: #43b0f1;
 }
 .quiz_items {
-  margin-left: 30px;
+  /* margin-left: 30px; */
 }
 .quiz_field {
   margin-left: 60px;
@@ -115,6 +126,7 @@ body {
   border-radius: 2px;
   transition: 0.2s ease all;
   cursor: pointer;
+  -webkit-appearance: none;
 }
 .quiz_send:hover {
   background: #43b0f1;
@@ -130,6 +142,7 @@ body {
   margin: 5px 0;
   padding: 5px;
   position: relative;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 .quiz_answer::before {
   content: "";
@@ -149,9 +162,57 @@ body {
 .quiz_answer:hover {
   text-decoration: underline;
 }
-/*colors
-#057dcd;
-#43b0f1
-#1e3d58
-#e8eef1
-*/
+
+.send_block {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Хз для чего */
+/* @media(max-width: 970px) {
+	.contanier {
+		max-width: 970px;
+	}
+} */
+
+/* для планшетов */
+@media(max-width: 992px) {
+  .container {
+    max-width: 768px;
+  }
+  .quiz {
+    margin: 20px;
+    padding: 15px;
+    border-radius: 10px;
+  }
+  .header {
+    margin: 20px;
+  }
+}
+
+/* для мобил */
+@media(max-width: 767px) {
+  .container {
+    max-width: none;
+    padding: 0;
+  }
+  .some_amazing_logo {
+    font-size: 34px;
+    /* text-align: center; */
+  }
+  .header {
+    margin: 20px;
+  }
+  .quiz {
+    margin: 20px;
+    padding: 15px;
+    border-radius: 10px;
+  }
+  .quiz_field {
+    margin-left: 40px;
+  }
+  .quiz_item_title {
+    font-size: 22px;
+  }
+}

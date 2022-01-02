@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>QUIZ PAGE</title>
     <link rel="stylesheet" href="/static/styles/userQuizPage_ui.css">
     <link rel="shortcut icon" href="/static/images/icon.png" type="image/x-icon">
@@ -19,14 +19,20 @@
     </div>
     <div class="main">
         <div class="container">
-            <h1 class="some_amazing_logo">
-                СЛАВА ПРИДУМАЙ НОРМАЛЬНОЕ НАЗВАНИЕ
-            </h1>
+            <div class="header">
+                <h1 class="some_amazing_logo">
+                    Amazing App
+                </h1>
+            </div>
             <div class="quiz">
-                <h1 class="quiz_title"></h1>
-                <hr class="quiz_hr">
+                <div class="quiz_title">
+                    <h1 class="quiz_title"></h1>
+                    <hr class="quiz_hr">
+                </div>
                 <div class="quiz_items"></div>
-                <input type="submit" class="quiz_send" value="Отправить!">
+                <div class="send_block">
+                    <input type="submit" class="quiz_send" value="Отправить!">
+                </div>
             </div>
         </div>
     </div>

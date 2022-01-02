@@ -1,11 +1,11 @@
 from pymysql.converters import escape_string
 import json
+import extends
 
 # проверка аккаунта админа для последующего входа
-def check_if_user_exists(db, data):
+def isUserExist(db, username, password):
     cursor = db.cursor()
-    username = data['username']
-    password = data['password']
+    password = extends.genHash(password)
     cmd = f'''SELECT 1 FROM main_table WHERE name = '{username}'AND password = '{password}';'''
     v = cursor.execute(cmd)
     # cursor.close()
@@ -14,15 +14,14 @@ def check_if_user_exists(db, data):
     return False
 
 # записывает в бд обновлённые данные по квизам
-def quiz_updater(db, username, data):
+def updateUserQuizzes(db, username, data):
     cursor = db.cursor()
-    # a = str(data).replace('\'', '\"')
     cmd = f''' UPDATE main_table SET data = "{escape_string(json.dumps(data, ensure_ascii=False))}" WHERE name = "{username}"; '''
     cursor.execute(cmd)
     db.commit()
 
 # получение информации из бд
-def quizies_getter(db, username):
+def getQuizzesFromDB(db, username):
     cursor = db.cursor()
     cmd = f'''SELECT data FROM main_table WHERE name = "{username}";'''
     cursor.execute(cmd)
