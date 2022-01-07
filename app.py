@@ -16,8 +16,7 @@ try:
     )
     print('Подключено!')
 except Exception as ex:
-    print('Ошибка при подключении!')
-    print(ex)
+    print('Ошибка при подключении!', ex)
 
 app = Flask(__name__)
 
@@ -70,7 +69,7 @@ def quiz_func(twelveDigitCode):
             return json.dumps(quiz)
 
         if data['type'] == 'writeToDB':
-            print(data['data'])
+            # print(data['data'])
             studentName = data['data']['studentName']
 
             try:
@@ -89,7 +88,7 @@ def data_worker():
 
     if data['type'] == 'check_log':
         is_exist = db_funcs.isUserExist(db, data['username'], data['password'])
-        print(data['username'], data['password'], is_exist)
+        # print(data['username'], data['password'], is_exist)
         if is_exist:
             data_from_db = db_funcs.getQuizzesFromDB(db, data['username'])
             quizzes_data = db_funcs.getCurrentQuizzes(db, data['username'])
@@ -98,7 +97,7 @@ def data_worker():
         
 
     if data['type'] == 'quizies':
-        print(data)
+        # print(data)
         try:
             db_funcs.updateUserQuizzes(db, data['name'], data['data'])
         except (pymysql.err.InternalError, pymysql.err.InterfaceError):
@@ -114,7 +113,7 @@ def data_worker():
         sixDigitCode = extends.genSomeCode(6).upper()
         linkCode = extends.genSomeCode(12)
         linkToQuiz = request.host_url+'quiz/'+linkCode
-        print(linkToQuiz)
+        # print(linkToQuiz)
         pathToImgQr = extends.genQr(linkToQuiz, linkCode+'.png')
         try:
             db_funcs.insertQuizData(db, username, quizname, linkToQuiz, pathToImgQr, sixDigitCode, linkCode)

@@ -65,3 +65,7 @@ body {
 .enter_nickname:hover {
     background-color: #1e3d58;
 }
+
+.header {
+    background-color: #F4F3ED;
+}
