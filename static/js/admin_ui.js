@@ -26,7 +26,8 @@ function send_to_server(url, data) {
     req.send(JSON.stringify(d));
     req.onload = () => {
         if (req.readyState === 4 && req.status === 200) {
-            console.log('❤🎂fjfgbersgbksdfuigb5879hturt');
+            // console.log('❤🎂fjfgbersgbksdfuigb5879hturt');
+            console.log('succsess request')
         }
     }
 }
@@ -462,6 +463,7 @@ function ListenBtns() {
                     let ans_obj = getPopularAnswers(students_arr);
                     console.log(ans_obj)
                     let popular = document.querySelector(".charts_data");
+                    popular.innerHTML = '';
                     let c = 0;
                     for(let i of quiz.quiz) {
                         popular.innerHTML += `
