@@ -401,7 +401,7 @@ function ListenBtns() {
         });
     });
 
-    //таблица с результатами 
+    //таблица с результатами
     const statistic = document.querySelector(".statistic_wrapper");
     document.querySelectorAll(".task_statistics").forEach(i => {
         i.addEventListener("click", elem => {
@@ -458,12 +458,65 @@ function ListenBtns() {
                         </tr >
                         `;
                     }
-
+                    console.log(students_arr);
+                    let ans_obj = getPopularAnswers(students_arr);
+                    console.log(ans_obj)
+                    let popular = document.querySelector(".charts_data");
+                    let c = 0;
+                    for(let i of quiz.quiz) {
+                        popular.innerHTML += `
+                        <p class="p_charts">${i.question} - <span class="ans_item_span">${ans_obj[c].item}</span></p>
+                        `
+                        c++;
+                    }
                 }
             }
             
         });
     });
+}
+
+function getPopularAnswers(arr) {
+    // очень сложная функция
+    let aa = []
+    let a = []
+    // создаю массивы значений
+    arr.forEach((item, i, arr) => {
+        a.push(Object.values(item.answers));
+    });
+    // console.log(a);
+    // создаю массивы одинаковых значений
+    for(let i=0;i<a.length;i++) {
+        let tmp = [];
+        a.forEach((item, ix, a) => {
+            tmp.push(item[i])
+        });
+        if ( tmp.every( (val, iy, tmp) => val === undefined ) ) break;
+        aa.push(tmp);
+    }
+    // console.log(aa);
+    // нахожу популярные значения
+    let bb = []
+    aa.forEach((myitem, i, aa) => {
+        const maxOccurences = myitem => Array.from(
+            myitem.reduce(
+            (map, value) => map.set(
+            value,
+            map.has(value)
+                ? map.get(value) + 1
+                : 1
+            ),
+            new Map()
+        ).entries()
+        ).reduce(
+        (max, entry) => entry[1] > max[1] ? entry : max
+        ).reduce(
+        (item, count) => ({ item, count })
+        );
+        bb.push(maxOccurences(myitem));
+    });
+    // console.log(bb);
+    return bb;
 }
 
 function parseUser() {

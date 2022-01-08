@@ -204,6 +204,9 @@ body {
   opacity: 0;
   transition: 0.2s ease opacity;
 }
+.statistic_wrapper {
+  overflow-y: scroll;
+}
 .qr_code_popup_wrapper.active,
 .edit_pop_up.active,
 .statistic_wrapper.active {
@@ -507,6 +510,23 @@ body {
   font-weight: 400;
 }
 
+.statistics_charts {
+  margin-top: 20px;
+}
+.h1_charts {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+.p_charts {
+  font-size: 20px;
+  padding: 3px 0;
+}
+.ans_item_span {
+  /* color: #C43B48; */
+  /* border-bottom: 2px solid #C43B48; */
+  background-color: #057dcd;
+  padding: 3px 5px;
+}
 
 
 /* для планшетов */
