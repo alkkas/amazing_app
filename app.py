@@ -35,10 +35,25 @@ def student_func():
                 link = db_funcs.getQuizLink(db, username, quizname)
                 return json.dumps({'is_exist': 'true', 'link': link})
 
+        if data['type'] == 'registerUser':
+            email = data['email']
+            username = data['username']
+            password = data['password']
+            if db_funcs.checkNameAndEmail(db, username, email) == False: #значит такого юзера нет в базе
+                db_funcs.registerNewUser(db, username, email, password)
+                quizzes = db_funcs.getQuizzesFromDB(db, username)
+                
+                return json.dumps({'userAlreadyExist': 'false', 'quizzes': quizzes})
+            else:
+                return json.dumps({'userAlreadyExist': 'true'})
+
     return render_template('homePage.html')
 
+@app.route("/start", methods=['GET'])
+def start_func():
+    return render_template('startPage.html')
 
-@app.route("/admin", methods=['GET', 'POST'])
+@app.route("/admin", methods=['GET'])
 def admin_func():
     return render_template('admin_ui.html')
 

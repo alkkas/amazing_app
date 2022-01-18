@@ -11,29 +11,102 @@
 <body>
     <div class="header">
         <div class="container">
-            <div class="header_left">
-                <!-- <h1>Quizzy</h1> -->
-                <h1>Quizzle</h1>
+            <div class="header_wrap">
+                <div class="header_left">
+                    <!-- <h1>Quizzle</h1> -->
+                </div>
+                <div class="header_right">
+                    <button class="acc_btn runpop1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-    <div class="container">
-        <div class="first_part">
-            <!-- <div class="header">
-                <p style="color: #fff">Вы преподаватель? Войти или зарегистрироваться.</p>
-            </div> -->
+
+    <div class="main">
+        <div class="container">
+            <div class="about_part">
+                <div class="text_about">
+                    <p class="about_p"><span>Quizzle</span> - сайт для создания и проведения опросов.</p>
+                    <!-- <p class="about_p"><span>Quizzle</span> - проводи опросы как царь.</p> -->
+                </div>
+                <div class="text_promo">
+                    <!-- <p class="promo_p">Для создания вашего первого опроса нажмите <span>сюда</span></p> -->
+                    <button class="acc_btn2 runpop2">Создать опрос</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div class="main">
+        <div class="container">
+            <h1 class="dev_h1">Разработчики</h1>
+            <div class="who_we_are">
+                
+                <div class="big_dev_block">
+                    <div class="img_dev">
+                        <img src="https://avatars.githubusercontent.com/u/90968281?v=4" alt="">
+                    </div>
+                    <div class="info_dev_part">
+                        <h2>xamelllion</h2>
+                        <p>Backend сайта</p>
+                    </div>
+                </div>
+                <div class="big_dev_block">
+                    <div class="img_dev">
+                        <img src="https://avatars.githubusercontent.com/u/14296481?v=4" alt="">
+                    </div>
+                    <div class="info_dev_part">
+                        <h2>alkkas</h2>
+                        <p>Frontend сайта</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div> -->
+
+    <!-- <div class="main_2">
+        <div class="container">
             <div class="game_code">
-                <h1>Amazing app</h1>
+                <h1></h1>
                 <form action="">
                     <div class="centre_block">
-                        <input id="nickname_field" placeholder="Код квиза: GI7RBS" type="text" class="input_nickname_field">
-                        <button type="submit" class="enter_nickname">Enter</button>
+                        <input id="nickname_field" placeholder="Введите код квиза" type="text" class="input_nickname_field">
+                        <button id="send_quiz" type="submit" class="enter_nickname">Enter</button>
                     </div>
                 </form>
             </div>
-            <div class="bottom_part">
-                
+        </div>
+    </div> -->
+
+    <div class="auth_popup">
+        <div class="popup_body">
+            <div class="close_popup">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#fff" class="bi bi-x-lg" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
+                    <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
+                </svg>
             </div>
+            
+            <div class="auth_wrap">
+                <h1>Регистрация</h1>
+                <div class="centre_block">
+                    <form action="" name="reg_form">
+                        <div class="hype_div">
+                            <input id="reg_email" placeholder="Email" type="email" class="input_nickname_field">
+                            <input id="reg_usname" placeholder="Имя пользователя" type="text" class="input_nickname_field">
+                            <input id="reg_pass" placeholder="Пароль" type="password" class="input_nickname_field">
+                        </div>
+                        <button id="register" type="submit" class="enter_nickname">Enter</button>
+                    </form>
+                </div>
+                <p class="log_p">Есть аккаунт? <a href="/admin" class="log_a">Войти</a></p>
+            </div>  
         </div>
     </div>
     <script src="/static/js/homePage.js"></script>

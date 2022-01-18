@@ -486,6 +486,11 @@ body {
 .enter_nickname:hover {
   background-color: #1e3d58;
 }
+.login_popup_h1 {
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 32px;
+}
 
 /*STATISTIC  */
 .statistic_title {

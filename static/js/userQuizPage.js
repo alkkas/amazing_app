@@ -27,6 +27,11 @@ window.addEventListener('load', () => {
 
 //popup 
 function login(callback) {
+    let dt = localStorage.getItem('login');
+    if (dt != null) {
+        callback();
+        return;
+    }
     document.querySelector(".login_popup").style.display = "grid";
     enter_nick.addEventListener('click', (event) => {
         event.preventDefault();

@@ -9,7 +9,8 @@ mainPartBlock.style.display = "none";
 function logout_click() {
     localStorage.removeItem('user');
     localStorage.removeItem('username');
-    location.reload();
+    // location.reload();
+    window.location.href = '/';
 }
 
 function send_to_server(url, data) {
