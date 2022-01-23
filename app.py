@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, send_from_directory
 import db_funcs, extends
 import pymysql
 import config
@@ -167,6 +167,10 @@ def data_worker():
         statistics_data = db_funcs.getCurrentStatistics(db, data['username'], data['quiz_name'])
         return json.dumps({"statistics_data": statistics_data})
 
+
+@app.route('/robots.txt')
+def static_from_root():
+    return send_from_directory(app.static_folder, request.path[1:])
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0', port=5050)
