@@ -1,17 +1,18 @@
 from flask import Flask, render_template, request, redirect
 import db_funcs, extends
 import pymysql
+import config
 import json
 import os
 
 global db
 try:
     db = pymysql.connect(
-        host="localhost",
+        host=config.db_host,
         port=3306,
-        user="root",
-        password="",
-        database="as_proj",
+        user=config.db_user,
+        password=config.db_password,
+        database=config.db_name,
         cursorclass=pymysql.cursors.DictCursor
     )
     print('Подключено!')
@@ -39,6 +40,7 @@ def student_func():
             email = data['email']
             username = data['username']
             password = data['password']
+            print(f'New user: {email} {username}')
             if db_funcs.checkNameAndEmail(db, username, email) == False: #значит такого юзера нет в базе
                 db_funcs.registerNewUser(db, username, email, password)
                 quizzes = db_funcs.getQuizzesFromDB(db, username)
@@ -120,10 +122,9 @@ def data_worker():
         return json.dumps({"hello": "world"})
     
     if data['type'] == 'startQuiz':
-        print('--- START QUIZ ---')
-
         username = data['username']
         quizname = data['quizname']
+        print('--- START QUIZ ---', username, quizname)
 
         sixDigitCode = extends.genSomeCode(6).upper()
         linkCode = extends.genSomeCode(12)
@@ -137,9 +138,9 @@ def data_worker():
         return json.dumps({"sixdigitcode": sixDigitCode, "pathtoimg": pathToImgQr})
     
     if data['type'] == 'endQuiz':
-        print('--- END QUIZ ---')
         username = data['username']
         quizname = data['quizname']
+        print('--- END QUIZ ---', username, quizname)
         try:
             linkToQr = db_funcs.getQuizQr(db, username, quizname)
             db_funcs.updateQuizData(db, username, quizname)
@@ -148,10 +149,15 @@ def data_worker():
             print('endQuiz - иди нахуй')
 
         try:
+            # for windows version
             path = os.path.join(os.path.abspath(os.path.dirname(__file__)), linkToQr.replace('/', '\\'))
             os.remove(path)
         except FileNotFoundError:
-            pass
+            # for linux version
+            try:
+                path = os.path.join(os.path.abspath(os.path.dirname(__file__)), linkToQr)
+                os.remove(path)
+            except FileNotFoundError: print(f'Internal server error while deliting file {linkToQr}')
 
         return json.dumps({"fuck": "you"})
 
@@ -163,4 +169,4 @@ def data_worker():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)

@@ -13,7 +13,7 @@
         <div class="container">
             <div class="header_wrap">
                 <div class="header_left">
-                    <!-- <h1>Quizzle</h1> -->
+                    <p class="hl_p"><a href="/start">Пройти опрос</a></p>
                 </div>
                 <div class="header_right">
                     <button class="acc_btn runpop1">
@@ -35,40 +35,64 @@
                     <!-- <p class="about_p"><span>Quizzle</span> - проводи опросы как царь.</p> -->
                 </div>
                 <div class="text_promo">
-                    <!-- <p class="promo_p">Для создания вашего первого опроса нажмите <span>сюда</span></p> -->
                     <button class="acc_btn2 runpop2">Создать опрос</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- <div class="main">
-        <div class="container">
-            <h1 class="dev_h1">Разработчики</h1>
-            <div class="who_we_are">
-                
-                <div class="big_dev_block">
-                    <div class="img_dev">
-                        <img src="https://avatars.githubusercontent.com/u/90968281?v=4" alt="">
+    
+    <div id="info_popup" class="info_popup">
+        <h1>Разработчики</h1>
+        <div class="info_popup_wrap">
+            
+            <div class="dev_block">
+
+                <div id="dev_1" class="personal_dev_block">
+                    <div class="top_dev">
+                        <img class="top_dev_img" src="/static/images/dev/1.jpg" alt="">
                     </div>
-                    <div class="info_dev_part">
-                        <h2>xamelllion</h2>
+                    <div class="bottom_dev">
+                        <h1>Сидоров Вячеслав</h1>
                         <p>Backend сайта</p>
                     </div>
                 </div>
-                <div class="big_dev_block">
-                    <div class="img_dev">
-                        <img src="https://avatars.githubusercontent.com/u/14296481?v=4" alt="">
+
+                <div id="dev_2" class="personal_dev_block">
+                    <div class="top_dev">
+                        <img class="top_dev_img" src="https://avatars.githubusercontent.com/u/90968281?v=4" alt="">
                     </div>
-                    <div class="info_dev_part">
-                        <h2>alkkas</h2>
+                    <div class="bottom_dev">
+                        <h1>Черных Егор</h1>
                         <p>Frontend сайта</p>
+                    </div>
+                </div>
+
+                <div id="dev_3" class="personal_dev_block">
+                    <div class="top_dev">
+                        <img class="top_dev_img" src="/static/images/dev/3.jpg" alt="">
+                    </div>
+                    <div class="bottom_dev">
+                        <h1>Рыжик Даниил</h1>
+                        <p>База данных</p>
+                    </div>
+                </div>
+
+                <div id="dev_4" class="personal_dev_block">
+                    <div class="top_dev">
+                        <img class="top_dev_img" src="/static/images/dev/4.jpg" alt="">
+                    </div>
+                    <div class="bottom_dev">
+                        <h1>Шаганов Егор</h1>
+                        <p>QRs</p>
                     </div>
                 </div>
 
             </div>
         </div>
-    </div> -->
+        <!-- <p class="back"><a href="/start">Назад</a></p> -->
+    </div>
+
 
     <!-- <div class="main_2">
         <div class="container">
@@ -87,10 +111,12 @@
     <div class="auth_popup">
         <div class="popup_body">
             <div class="close_popup">
+                <!-- <img src="/static/images/close.png" width="32px" height="32px" alt=""> -->
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#fff" class="bi bi-x-lg" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
                     <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
                 </svg>
+                
             </div>
             
             <div class="auth_wrap">
@@ -98,9 +124,9 @@
                 <div class="centre_block">
                     <form action="" name="reg_form">
                         <div class="hype_div">
-                            <input id="reg_email" placeholder="Email" type="email" class="input_nickname_field">
-                            <input id="reg_usname" placeholder="Имя пользователя" type="text" class="input_nickname_field">
-                            <input id="reg_pass" placeholder="Пароль" type="password" class="input_nickname_field">
+                            <input id="reg_email" autocomplete="off" placeholder="Email" type="email" class="input_nickname_field">
+                            <input id="reg_usname" autocomplete="off" placeholder="Имя пользователя" type="text" class="input_nickname_field">
+                            <input id="reg_pass" autocomplete="off" placeholder="Пароль" type="password" class="input_nickname_field">
                         </div>
                         <button id="register" type="submit" class="enter_nickname">Enter</button>
                     </form>

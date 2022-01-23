@@ -213,6 +213,9 @@ body {
   opacity: 1;
   transform: translateX(0%);
 }
+.qr_code_popup_wrapper.active {
+  overflow-y: hidden;
+}
 .qr_code_popup_title {
   text-align: center;
   color: #e8eef1;
@@ -245,13 +248,24 @@ body {
   height: 30px;
   position: absolute;
   top: 10px;
-  right: 10px;
+  right: 15px;
   display: grid;
   justify-content: center;
   align-content: center;
 }
-.popup_close img {
+.popup_close img, .popup_reload img {
   max-width: 100%;
+}
+.popup_reload {
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  top: 8px;
+  right: 65px;
+  display: grid;
+  justify-content: center;
+  align-content: center;
 }
 /* qr code styles by xamelllion */
 .sixdigitcode {

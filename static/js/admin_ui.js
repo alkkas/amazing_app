@@ -27,7 +27,6 @@ function send_to_server(url, data) {
     req.send(JSON.stringify(d));
     req.onload = () => {
         if (req.readyState === 4 && req.status === 200) {
-            // console.log('❤🎂fjfgbersgbksdfuigb5879hturt');
             console.log('succsess request')
         }
     }
@@ -131,6 +130,16 @@ function showQuizes(node, arr) {
     }
     ListenBtns()
 }
+
+let supportsPassive = false;
+try {
+  window.addEventListener("test", null, Object.defineProperty({}, 'passive', {
+    get: function () { supportsPassive = true; } 
+  }));
+} catch(e) {}
+
+let wheelOpt = supportsPassive ? { passive: false } : false;
+let wheelEvent = 'onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel';
 function disableScroll() {
     // Get the current page scroll position
     scrollTop = window.pageYOffset || document.documentElement.scrollTop;
@@ -138,11 +147,13 @@ function disableScroll() {
   
         // if any scroll is attempted, set this to the previous value
         window.onscroll = function() {
-            window.scrollTo(scrollLeft, scrollTop);
+            // window.scrollTo(scrollLeft, scrollTop);
         };
+        // window.addEventListener('touchmove', preventDefault, wheelOpt); // mobile
 }
 function enableScroll() {
     window.onscroll = function() {};
+    // window.removeEventListener('touchmove', preventDefault, wheelOpt);
 }
 
 let st_btn = document.querySelector('.st_quiz_btn');
@@ -189,6 +200,7 @@ function ListenBtns() {
     const qrCodeWrapper = document.querySelector(".qr_code_popup_wrapper");
     document.querySelectorAll(".task_qr").forEach((i) => {
         i.addEventListener("click", (item) => {
+            // disableScroll();
             let currentUser = parseUser().quizes[i.closest(".task_item").getAttribute("index")];
 
             if (currentUser.qrcode) {
@@ -403,12 +415,15 @@ function ListenBtns() {
         });
     });
 
+
     //таблица с результатами
     const statistic = document.querySelector(".statistic_wrapper");
     document.querySelectorAll(".task_statistics").forEach(i => {
         i.addEventListener("click", elem => {
             // подгружаю статистику
             let quiz = parseUser().quizes[i.closest(".task_item").getAttribute("index")];
+            
+
 
             // getStatistic(localStorage.getItem('username'), quiz.title);
             d = {'type': 'getStatistics', 'username': localStorage.getItem('username'), 'quiz_name': quiz.title}
@@ -433,6 +448,7 @@ function ListenBtns() {
                     });
                     console.log(students_arr);
 
+                    
 
                     statistic.classList.add('active');
                     document.body.style.overflow = "hidden";
@@ -472,6 +488,8 @@ function ListenBtns() {
                         `
                         c++;
                     }
+                    let currentTitle = document.querySelector('.statistic_title').innerHTML;
+                    console.log(currentTitle, '------')
                 }
             }
             

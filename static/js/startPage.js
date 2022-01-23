@@ -1,6 +1,6 @@
-const enterBtn = document.getElementById('send_quiz');
-const codeField = document.getElementById('nickname_field');
-const nicknameField = document.getElementById('nickname_field_2');
+let enterBtn = document.getElementById('send_quiz');
+let codeField = document.getElementById('nickname_field');
+let nicknameField = document.getElementById('nickname_field_2');
 
 
 // quiz starter
@@ -11,10 +11,10 @@ enterBtn.addEventListener('click', (e) => {
         return;
     }
     if (!nicknameField.value.replace(/\s/g, "").length) {
-        alert('Введите имя пользователя!');
+        alert('Вы забыли ввести никнейм!');
         return;
     }
-    localStorage.setItem('login', nicknameField.value);
+
     console.log(codeField.value.toUpperCase());
     let data = JSON.stringify({'type': 'sixDigitCode', 'code': codeField.value.toUpperCase()});
     let req = new XMLHttpRequest();
@@ -29,6 +29,7 @@ enterBtn.addEventListener('click', (e) => {
                 codeField.value = '';
                 return;
             }
+            localStorage.setItem('login', nicknameField.value);
             document.location.href = resp['link'];
         }
     }

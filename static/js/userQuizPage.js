@@ -1,6 +1,8 @@
-const nickname = document.getElementById('nickname_field');
+let nickname = document.getElementById('nickname_field');
 let enter_nick = document.querySelector(".enter_nickname");
 let userField = document.querySelector("#nickname_field");
+
+let loginPopup = document.getElementById('login_popup');
 
 let data = {
     studentName: "",
@@ -9,7 +11,7 @@ let data = {
 
 window.addEventListener('load', () => {
     if (localStorage.getItem("login")) {
-        document.querySelector(".login_popup").style.display = "none";
+        loginPopup.style.display = "none";
         // document.querySelector(".main").style.display = "block";
         data.studentName = localStorage.getItem("login");
         loadQuestions();
@@ -28,18 +30,19 @@ window.addEventListener('load', () => {
 //popup 
 function login(callback) {
     let dt = localStorage.getItem('login');
+    console.log(dt)
     if (dt != null) {
         callback();
         return;
     }
-    document.querySelector(".login_popup").style.display = "grid";
+    loginPopup.style.display = "grid";
     enter_nick.addEventListener('click', (event) => {
         event.preventDefault();
         if (!userField.value.replace(/\s/g, "").length) {
-            alert('Введите имя пользователя!');
+            alert('Вы забыли ввести никнейм!');
         } else {
             data.studentName = userField.value;
-            document.querySelector(".login_popup").style.display = "none";
+            loginPopup.style.display = "none";
             // document.querySelector(".main").style.display = "block";
             localStorage.setItem("login", userField.value);
             callback();
@@ -142,6 +145,6 @@ sendBtn.addEventListener("click", (event) => {
 
 function logout() {
     localStorage.removeItem('login');
-    location.reload();
-    // document.location.href = '/';
+    // location.reload();
+    document.location.href = '/';
 }

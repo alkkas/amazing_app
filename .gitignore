@@ -3,3 +3,4 @@ __pycache__/
 static/qrs/*.png
 test.json
 bot.py
+config.py

@@ -32,6 +32,18 @@ document.getElementById('register').addEventListener('click', (e) => {
     let email = document.getElementById('reg_email').value;
     let usname = document.getElementById('reg_usname').value;
     let pass = document.getElementById('reg_pass').value;
+    if (!/^[a-z0-9_-]{3,}$/.test(usname)) {
+        alert('Неверный формат имени пользователя!');
+        return;
+    }
+    if (!/[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/.test(email)) {
+        alert('Неверный формат email!');
+        return;
+    }
+    if (!/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/.test(usname)) {
+        alert('Выберите другой пароль!');
+        return;
+    }
     console.log(email, usname, pass);
     let data = JSON.stringify({'type': 'registerUser', 'email': email, 'username': usname, 'password': pass });
     let req = new XMLHttpRequest();
@@ -68,3 +80,13 @@ function disableScroll() {
 function enableScroll() {
     window.onscroll = function() {};
 }
+
+document.getElementById('dev_1').addEventListener('click', ()=> {
+    window.location.href = 'https://xamelllion.ru/';
+});
+document.getElementById('dev_3').addEventListener('click', ()=> {
+    window.location.href = 'https://vk.com/ginger20';
+});
+document.getElementById('dev_4').addEventListener('click', ()=> {
+    window.location.href = 'https://vk.com/shotganov';
+});

@@ -6,6 +6,7 @@ import extends
 def isUserExist(db, username, password):
     cursor = db.cursor()
     password = extends.genHash(password)
+    username = escape_string(username)
     cmd = f'''SELECT 1 FROM main_table WHERE name = '{username}'AND password = '{password}';'''
     v = cursor.execute(cmd)
     # cursor.close()
@@ -16,6 +17,7 @@ def isUserExist(db, username, password):
 # проверка имени пользователя и email на наличие в базе
 def checkNameAndEmail(db, username, email):
     cursor = db.cursor()
+    username = escape_string(username)
     cmd = f'''SELECT 1 FROM main_table WHERE name = '{username}';'''
     v1 = cursor.execute(cmd)
     cmd = f'''SELECT 1 FROM main_table WHERE email = '{email}';'''
@@ -27,6 +29,7 @@ def checkNameAndEmail(db, username, email):
 
 def registerNewUser(db, username, email, password):
     data_temp = '''{"name": "'''+username+'''", "quizes": []}'''
+    username = escape_string(username)
     password_hash = extends.genHash(password)
     cursor = db.cursor()
 
@@ -44,6 +47,7 @@ def registerNewUser(db, username, email, password):
 
 # записывает в бд обновлённые данные по квизам
 def updateUserQuizzes(db, username, data):
+    username = escape_string(username)
     cursor = db.cursor()
     cmd = f''' UPDATE main_table SET data = "{escape_string(json.dumps(data, ensure_ascii=False))}" WHERE name = "{username}"; '''
     cursor.execute(cmd)
@@ -51,6 +55,7 @@ def updateUserQuizzes(db, username, data):
 
 # получение информации из бд
 def getQuizzesFromDB(db, username):
+    username = escape_string(username)
     cursor = db.cursor()
     cmd = f'''SELECT data FROM main_table WHERE name = "{username}";'''
     cursor.execute(cmd)
@@ -59,6 +64,8 @@ def getQuizzesFromDB(db, username):
 
 # записывает данные по созданному квизу в БД
 def insertQuizData(db, username, quizname, quiz_link, link_to_qr, six_digit_code, twelve_digit_code):
+    username = escape_string(username)
+    quizname = escape_string(quizname)
     cursor = db.cursor()
     cmd = f'''
         INSERT INTO data (username, quizname, quiz_link, link_to_qr, six_digit_code, twelve_digit_code)
@@ -69,6 +76,8 @@ def insertQuizData(db, username, quizname, quiz_link, link_to_qr, six_digit_code
     db.commit()
 
 def updateQuizData(db, username, quizname):
+    username = escape_string(username)
+    quizname = escape_string(quizname)
     cursor = db.cursor()
     cmd = f'''
         DELETE FROM data
@@ -79,6 +88,8 @@ def updateQuizData(db, username, quizname):
     db.commit()
 
 def getQuizQr(db, username, quizname):
+    username = escape_string(username)
+    quizname = escape_string(quizname)
     cursor = db.cursor()
     cmd = f'''
         SELECT link_to_qr FROM data 
@@ -90,6 +101,8 @@ def getQuizQr(db, username, quizname):
     return data['link_to_qr']
 
 def getQuizLink(db, username, quizname):
+    username = escape_string(username)
+    quizname = escape_string(quizname)
     cursor = db.cursor()
     cmd = f'''
         SELECT quiz_link FROM data 
@@ -119,6 +132,9 @@ def getDataByCode(db, code, num):
     return (data['quizname'], data['username'])
 
 def writeDataToStatistic(db, owner_name, quiz_name, student_name, value):
+    owner_name = escape_string(owner_name)
+    quiz_name = escape_string(quiz_name)
+    student_name = escape_string(student_name)
     cursor = db.cursor()
     cmd = f'''
         INSERT INTO quiz_statistics (owner_name, quiz_name, student_name, value)
@@ -129,6 +145,7 @@ def writeDataToStatistic(db, owner_name, quiz_name, student_name, value):
     db.commit()
 
 def getCurrentQuizzes(db, owner_name):
+    owner_name = escape_string(owner_name)
     cursor = db.cursor()
     cmd = f'''
         SELECT quizname, link_to_qr, six_digit_code FROM data
@@ -142,6 +159,8 @@ def getCurrentQuizzes(db, owner_name):
     return data
 
 def getCurrentStatistics(db, owner_name, quizname):
+    owner_name = escape_string(owner_name)
+    quizname = escape_string(quizname)
     cursor = db.cursor()
     cmd = f'''
         SELECT value FROM quiz_statistics
@@ -154,6 +173,8 @@ def getCurrentStatistics(db, owner_name, quizname):
     return data
 
 def deleteUnusedStatistics(db, owner_name, quizname):
+    owner_name = escape_string(owner_name)
+    quizname = escape_string(quizname)
     cursor = db.cursor()
     cmd = f'''
         DELETE FROM quiz_statistics
