@@ -4,3 +4,4 @@ static/qrs/*.png
 test.json
 bot.py
 config.py
+logs.log

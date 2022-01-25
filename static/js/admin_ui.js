@@ -137,7 +137,6 @@ try {
     get: function () { supportsPassive = true; } 
   }));
 } catch(e) {}
-
 let wheelOpt = supportsPassive ? { passive: false } : false;
 let wheelEvent = 'onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel';
 function disableScroll() {
@@ -155,6 +154,7 @@ function enableScroll() {
     window.onscroll = function() {};
     // window.removeEventListener('touchmove', preventDefault, wheelOpt);
 }
+
 
 function isNewQuizNone(title) {
     let data = parseUser();
@@ -192,7 +192,6 @@ st_btn.addEventListener('click', (e) => {
         alert('Вы не можете начать опрос, если прописаны не все ответы!');
         return;
     }
-    console.log(isNewQuizNone(currentTitle))
     console.log('startQuiz');
     startQuiz(localStorage.getItem('username'), currentTitle);
     document.querySelector('.qr_data').style = 'display: block';
@@ -250,6 +249,14 @@ function ListenBtns() {
     document.querySelectorAll(".task_edit").forEach(i => {
         i.addEventListener("click", event => {
             let currentQuiz = parseUser().quizes[i.closest(".task_item").getAttribute("index")];
+            console.log(currentQuiz);
+            if (currentQuiz.qrcode) {
+                console.log('quize is active');
+                alert('Вы не можете редактировать опрос, пока он запущен!');
+                return;
+            }
+                
+
             editWrapper.classList.add("active");
             document.querySelector(".edit_pop_up_title").innerHTML = currentQuiz.title;
             document.querySelector(".edit_pop_up_title").setAttribute("index", i.closest(".task_item").getAttribute("index"))
