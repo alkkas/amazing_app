@@ -146,5 +146,8 @@ sendBtn.addEventListener("click", (event) => {
 function logout() {
     localStorage.removeItem('login');
     // location.reload();
-    document.location.href = '/';
+    setTimeout( ()=> {
+        document.location.href = '/';
+    }, 1000);
+    
 }

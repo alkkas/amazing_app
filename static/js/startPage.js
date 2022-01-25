@@ -30,7 +30,10 @@ enterBtn.addEventListener('click', (e) => {
                 return;
             }
             localStorage.setItem('login', nicknameField.value);
-            document.location.href = resp['link'];
+            setTimeout( ()=> {
+                document.location.href = resp['link'];
+            }, 500);
+            
         }
     }
 });

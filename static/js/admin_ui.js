@@ -156,6 +156,19 @@ function enableScroll() {
     // window.removeEventListener('touchmove', preventDefault, wheelOpt);
 }
 
+function isNewQuizNone(title) {
+    let data = parseUser();
+    for (let i in data.quizes) {
+        if (data.quizes[i].title == title) {
+            if (data.quizes[i].quiz.length == 0) return true;
+            for (let j in data.quizes[i].quiz){
+                if ( data.quizes[i].quiz[j].answers.length == 0) return true;
+            }
+        }
+    }
+    return false;
+}
+
 let st_btn = document.querySelector('.st_quiz_btn');
 let nd_btn = document.querySelector('.nd_quiz_btn');
 // завершение квиза
@@ -174,6 +187,12 @@ st_btn.addEventListener('click', (e) => {
     e.stopPropagation();
     e.preventDefault();
     let currentTitle = document.querySelector('.qr_code_popup_title').innerHTML;
+
+    if (isNewQuizNone(currentTitle)==true) {
+        alert('Вы не можете начать опрос, если прописаны не все ответы!');
+        return;
+    }
+    console.log(isNewQuizNone(currentTitle))
     console.log('startQuiz');
     startQuiz(localStorage.getItem('username'), currentTitle);
     document.querySelector('.qr_data').style = 'display: block';

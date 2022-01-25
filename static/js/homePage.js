@@ -1,5 +1,12 @@
 const popupClose = document.querySelector('.close_popup');
 
+window.onload = function () {
+    if (localStorage.getItem('hm_key') != 'done') {
+        alert('Внимание! До 1 февраля сайт работает в пилотном режиме. Заранее приносим извинения за возможные сбои в системе.');
+        localStorage.setItem('hm_key', 'done');
+    }
+}
+
 // register popup
 popupClose.addEventListener('click', (e) => {
     document.querySelector('.auth_popup').classList.toggle('active_popup');
@@ -32,16 +39,16 @@ document.getElementById('register').addEventListener('click', (e) => {
     let email = document.getElementById('reg_email').value;
     let usname = document.getElementById('reg_usname').value;
     let pass = document.getElementById('reg_pass').value;
-    if (!/^[a-z0-9_-]{3,}$/.test(usname)) {
-        alert('Неверный формат имени пользователя!');
+    if (!usname.replace(/\s/g, "").length) {
+        alert('Введите имя пользователя!');
         return;
     }
     if (!/[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/.test(email)) {
         alert('Неверный формат email!');
         return;
     }
-    if (!/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/.test(usname)) {
-        alert('Выберите другой пароль!');
+    if (!/^.{8,}$/.test(pass)) {
+        alert('Пароль должен быть длиннее 8 символов!');
         return;
     }
     console.log(email, usname, pass);
@@ -83,6 +90,9 @@ function enableScroll() {
 
 document.getElementById('dev_1').addEventListener('click', ()=> {
     window.location.href = 'https://xamelllion.ru/';
+});
+document.getElementById('dev_2').addEventListener('click', ()=> {
+    window.location.href = 'https://vk.com/alliscakess';
 });
 document.getElementById('dev_3').addEventListener('click', ()=> {
     window.location.href = 'https://vk.com/ginger20';

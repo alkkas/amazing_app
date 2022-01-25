@@ -22,7 +22,7 @@ def checkNameAndEmail(db, username, email):
     v1 = cursor.execute(cmd)
     cmd = f'''SELECT 1 FROM main_table WHERE email = '{email}';'''
     v2 = cursor.execute(cmd)
-    print(v1, v2)
+    # print(v1, v2)
     if v1 == 1 or v2 == 1:
         return True # юзер существует
     return False
@@ -38,8 +38,8 @@ def registerNewUser(db, username, email, password):
     max_id = max_id['MAX(id)'] + 1
 
     cmd = f'''
-        INSERT INTO main_table (id, name, email, password, data)
-        VALUES ({max_id}, "{username}", "{email}", "{password_hash}", "{escape_string(data_temp)}");
+        INSERT INTO main_table (id, name, email, password, settings, data)
+        VALUES ({max_id}, "{username}", "{email}", "{password_hash}", "", "{escape_string(data_temp)}");
     '''
     cursor.execute(cmd)
     db.commit()
@@ -60,6 +60,7 @@ def getQuizzesFromDB(db, username):
     cmd = f'''SELECT data FROM main_table WHERE name = "{username}";'''
     cursor.execute(cmd)
     data = cursor.fetchone()
+    # print(data)
     return data['data']
 
 # записывает данные по созданному квизу в БД
@@ -83,7 +84,7 @@ def updateQuizData(db, username, quizname):
         DELETE FROM data
         WHERE username = "{username}" AND quizname = "{quizname}";
     '''
-    # print(cmd)
+    print(cmd)
     cursor.execute(cmd)
     db.commit()
 
@@ -97,7 +98,7 @@ def getQuizQr(db, username, quizname):
     '''
     cursor.execute(cmd)
     data = cursor.fetchone()
-    # print(data)
+    print(data)
     return data['link_to_qr']
 
 def getQuizLink(db, username, quizname):

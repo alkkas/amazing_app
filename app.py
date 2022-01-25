@@ -1,9 +1,13 @@
 from flask import Flask, render_template, request, redirect, send_from_directory
 import db_funcs, extends
+import logging
 import pymysql
 import config
 import json
 import os
+
+# logging.basicConfig(level=logging.NOTSET, filename='logs.log', filemode='w')
+# logging.getLogRecordFactory
 
 global db
 try:
@@ -145,8 +149,8 @@ def data_worker():
             linkToQr = db_funcs.getQuizQr(db, username, quizname)
             db_funcs.updateQuizData(db, username, quizname)
             db_funcs.deleteUnusedStatistics(db, username, quizname)
-        except (pymysql.err.InternalError, pymysql.err.InterfaceError, AttributeError):
-            print('endQuiz - иди нахуй')
+        except (pymysql.err.InternalError, pymysql.err.InterfaceError, AttributeError, TypeError) as er:
+            print('endQuiz - иди нахуй\n'+er)
 
         try:
             # for windows version
@@ -174,3 +178,4 @@ def static_from_root():
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0', port=5050)
+    # app.run(debug=True)
