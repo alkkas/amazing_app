@@ -160,6 +160,7 @@ function isNewQuizNone(title) {
     let data = parseUser();
     for (let i in data.quizes) {
         if (data.quizes[i].title == title) {
+            if (data.quizes[i].quiz == undefined) return 'clear'; 
             if (data.quizes[i].quiz.length == 0) return true;
             for (let j in data.quizes[i].quiz){
                 if ( data.quizes[i].quiz[j].answers.length == 0) return true;
@@ -188,6 +189,10 @@ st_btn.addEventListener('click', (e) => {
     e.preventDefault();
     let currentTitle = document.querySelector('.qr_code_popup_title').innerHTML;
 
+    if (isNewQuizNone(currentTitle)=='clear') {
+        alert('Вы не можете начать пустой опрос!');
+        return;
+    }
     if (isNewQuizNone(currentTitle)==true) {
         alert('Вы не можете начать опрос, если прописаны не все ответы!');
         return;

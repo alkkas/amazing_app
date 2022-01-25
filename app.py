@@ -6,7 +6,7 @@ import config
 import json
 import os
 
-# logging.basicConfig(level=logging.NOTSET, filename='logs.log', filemode='w')
+# logging.basicConfig(level=logging.DEBUG, filename='logs.log', filemode='w')
 # logging.getLogRecordFactory
 
 global db
