@@ -6,8 +6,9 @@ import config
 import json
 import os
 
-# logging.basicConfig(level=logging.DEBUG, filename='logs.log', filemode='w')
-# logging.getLogRecordFactory
+logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=logging.DEBUG, filename='log.log', filemode='w', encoding='UTF-8', datefmt='%d-%b-%y %H:%M:%S')
+logging.getLogRecordFactory
+
 
 global db
 try:
@@ -19,9 +20,9 @@ try:
         database=config.db_name,
         cursorclass=pymysql.cursors.DictCursor
     )
-    print('Подключено!')
+    logging.info('Connected to DB!')
 except Exception as ex:
-    print('Ошибка при подключении!', ex)
+    logging.error('Error in DB connection!', exc_info=True)
 
 app = Flask(__name__)
 
@@ -44,7 +45,7 @@ def student_func():
             email = data['email']
             username = data['username']
             password = data['password']
-            print(f'New user: {email} {username}')
+            logging.info(f'New user was registred: {email} {username}')
             if db_funcs.checkNameAndEmail(db, username, email) == False: #значит такого юзера нет в базе
                 db_funcs.registerNewUser(db, username, email, password)
                 quizzes = db_funcs.getQuizzesFromDB(db, username)
@@ -77,7 +78,7 @@ def quiz_func(twelveDigitCode):
                 quizname, username = db_funcs.getDataByCode(db, twelveDigitCode, 12)
                 allQuizData = db_funcs.getQuizzesFromDB(db, username)
             except (pymysql.err.InternalError, pymysql.err.InterfaceError):
-                print('DB error')
+                logging.error('DB error while read user quizzes!')
             
             allQuizData = json.loads(allQuizData)
             quiz = ''
@@ -90,14 +91,14 @@ def quiz_func(twelveDigitCode):
             return json.dumps(quiz)
 
         if data['type'] == 'writeToDB':
-            # print(data['data'])
+            # logging.debug(data['data'])
             studentName = data['data']['studentName']
 
             try:
                 quizname, owner_name = db_funcs.getDataByCode(db, twelveDigitCode, 12)
                 db_funcs.writeDataToStatistic(db, owner_name, quizname, studentName, data['data'])
             except (pymysql.err.InternalError, pymysql.err.InterfaceError):
-                print('DB error')
+                logging.error('DB error while write user quizzes!')
             return json.dumps({'go': 'out'})
 
     return render_template('userQuizPage.html')
@@ -109,7 +110,7 @@ def data_worker():
 
     if data['type'] == 'check_log':
         is_exist = db_funcs.isUserExist(db, data['username'], data['password'])
-        # print(data['username'], data['password'], is_exist)
+        # logging.debug(data['username'], data['password'], is_exist)
         if is_exist:
             data_from_db = db_funcs.getQuizzesFromDB(db, data['username'])
             quizzes_data = db_funcs.getCurrentQuizzes(db, data['username'])
@@ -118,39 +119,39 @@ def data_worker():
         
 
     if data['type'] == 'quizies':
-        # print(data)
+        # logging.debug(data)
         try:
             db_funcs.updateUserQuizzes(db, data['name'], data['data'])
         except (pymysql.err.InternalError, pymysql.err.InterfaceError):
-            print('запись в бд - иди нахуй')
+            logging.error('Запись в бд - иди нахуй')
         return json.dumps({"hello": "world"})
     
     if data['type'] == 'startQuiz':
         username = data['username']
         quizname = data['quizname']
-        print('--- START QUIZ ---', username, quizname)
+        logging.info(f'START QUIZ {username} - {quizname}')
 
         sixDigitCode = extends.genSomeCode(6).upper()
         linkCode = extends.genSomeCode(12)
         linkToQuiz = request.host_url+'quiz/'+linkCode
-        # print(linkToQuiz)
+        # logging.debug(linkToQuiz)
         pathToImgQr = extends.genQr(linkToQuiz, linkCode+'.png')
         try:
             db_funcs.insertQuizData(db, username, quizname, linkToQuiz, pathToImgQr, sixDigitCode, linkCode)
         except (pymysql.err.InternalError, pymysql.err.InterfaceError, AttributeError):
-            print('startQuiz - иди нахуй')
+            logging.debug('startQuiz - иди нахуй')
         return json.dumps({"sixdigitcode": sixDigitCode, "pathtoimg": pathToImgQr})
     
     if data['type'] == 'endQuiz':
         username = data['username']
         quizname = data['quizname']
-        print('--- END QUIZ ---', username, quizname)
+        logging.info(f'END QUIZ {username} - {quizname}')
         try:
             linkToQr = db_funcs.getQuizQr(db, username, quizname)
             db_funcs.updateQuizData(db, username, quizname)
             db_funcs.deleteUnusedStatistics(db, username, quizname)
         except (pymysql.err.InternalError, pymysql.err.InterfaceError, AttributeError, TypeError) as er:
-            print('endQuiz - иди нахуй\n'+er)
+            logging.error('endQuiz - иди нахуй', exc_info=True)
 
         try:
             # for windows version
@@ -161,7 +162,7 @@ def data_worker():
             try:
                 path = os.path.join(os.path.abspath(os.path.dirname(__file__)), linkToQr)
                 os.remove(path)
-            except FileNotFoundError: print(f'Internal server error while deliting file {linkToQr}')
+            except FileNotFoundError: logging.warning(f'Internal server error while deleting file {linkToQr}')
 
         return json.dumps({"fuck": "you"})
 
@@ -169,6 +170,7 @@ def data_worker():
         # dong something with statistics
     if data['type'] == 'getStatistics':
         statistics_data = db_funcs.getCurrentStatistics(db, data['username'], data['quiz_name'])
+        logging.info(f"Getting statistics for {data['username']} - {data['quiz_name']}")
         return json.dumps({"statistics_data": statistics_data})
 
 
@@ -178,4 +180,3 @@ def static_from_root():
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0', port=5050)
-    # app.run(debug=True)

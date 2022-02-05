@@ -1,6 +1,7 @@
 from pymysql.converters import escape_string
 import json
 import extends
+import logging
 
 # проверка аккаунта админа для последующего входа
 def isUserExist(db, username, password):
@@ -18,18 +19,20 @@ def isUserExist(db, username, password):
 def checkNameAndEmail(db, username, email):
     cursor = db.cursor()
     username = escape_string(username)
+    email = escape_string(email)
     cmd = f'''SELECT 1 FROM main_table WHERE name = '{username}';'''
     v1 = cursor.execute(cmd)
     cmd = f'''SELECT 1 FROM main_table WHERE email = '{email}';'''
     v2 = cursor.execute(cmd)
-    # print(v1, v2)
+    # logging.debug(v1, v2)
     if v1 == 1 or v2 == 1:
         return True # юзер существует
     return False
 
 def registerNewUser(db, username, email, password):
-    data_temp = '''{"name": "'''+username+'''", "quizes": []}'''
     username = escape_string(username)
+    email = escape_string(email)
+    data_temp = '''{"name": "'''+username+'''", "quizes": []}'''
     password_hash = extends.genHash(password)
     cursor = db.cursor()
 
@@ -43,7 +46,7 @@ def registerNewUser(db, username, email, password):
     '''
     cursor.execute(cmd)
     db.commit()
-    print(f'INFO: {username} was registered')
+    logging.debug(f'INFO: {username} was registered')
 
 # записывает в бд обновлённые данные по квизам
 def updateUserQuizzes(db, username, data):
@@ -60,7 +63,7 @@ def getQuizzesFromDB(db, username):
     cmd = f'''SELECT data FROM main_table WHERE name = "{username}";'''
     cursor.execute(cmd)
     data = cursor.fetchone()
-    # print(data)
+    # logging.debug(data)
     return data['data']
 
 # записывает данные по созданному квизу в БД
@@ -72,7 +75,7 @@ def insertQuizData(db, username, quizname, quiz_link, link_to_qr, six_digit_code
         INSERT INTO data (username, quizname, quiz_link, link_to_qr, six_digit_code, twelve_digit_code)
         VALUES ("{username}", "{quizname}", "{quiz_link}", "{link_to_qr}", "{six_digit_code}", "{twelve_digit_code}");
     '''
-    # print(cmd)
+    # logging.debug(cmd)
     cursor.execute(cmd)
     db.commit()
 
@@ -84,7 +87,7 @@ def updateQuizData(db, username, quizname):
         DELETE FROM data
         WHERE username = "{username}" AND quizname = "{quizname}";
     '''
-    print(cmd)
+    logging.debug(cmd)
     cursor.execute(cmd)
     db.commit()
 
@@ -98,7 +101,7 @@ def getQuizQr(db, username, quizname):
     '''
     cursor.execute(cmd)
     data = cursor.fetchone()
-    print(data)
+    logging.debug(data)
     return data['link_to_qr']
 
 def getQuizLink(db, username, quizname):
@@ -111,7 +114,7 @@ def getQuizLink(db, username, quizname):
     '''
     cursor.execute(cmd)
     data = cursor.fetchone()
-    print(data)
+    logging.debug(data)
     return data['quiz_link']
 
 def getDataByCode(db, code, num):
@@ -141,7 +144,7 @@ def writeDataToStatistic(db, owner_name, quiz_name, student_name, value):
         INSERT INTO quiz_statistics (owner_name, quiz_name, student_name, value)
         VALUES ("{owner_name}", "{quiz_name}", "{student_name}", "{escape_string(json.dumps(value, ensure_ascii=False))}");
     '''
-    # print(cmd)
+    # logging.debug(cmd)
     cursor.execute(cmd)
     db.commit()
 
@@ -154,7 +157,7 @@ def getCurrentQuizzes(db, owner_name):
     '''
     cursor.execute(cmd)
     data = cursor.fetchall()
-    print(data)
+    logging.debug(data)
     if len(data) == 0:
         return 'None'
     return data
@@ -181,6 +184,6 @@ def deleteUnusedStatistics(db, owner_name, quizname):
         DELETE FROM quiz_statistics
         WHERE owner_name = "{owner_name}" AND quiz_name = "{quizname}";
     '''
-    # print(cmd)
+    # logging.debug(cmd)
     cursor.execute(cmd)
     db.commit()

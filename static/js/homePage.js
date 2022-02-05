@@ -2,7 +2,7 @@ const popupClose = document.querySelector('.close_popup');
 
 window.onload = function () {
     if (localStorage.getItem('hm_key') != 'done') {
-        alert('Внимание! До 1 февраля сайт работает в пилотном режиме. Заранее приносим извинения за возможные сбои в системе.');
+        alert('Внимание! До 28 февраля сайт работает в пилотном режиме. Заранее приносим извинения за возможные сбои в системе.');
         localStorage.setItem('hm_key', 'done');
     }
 }
