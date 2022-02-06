@@ -10,7 +10,7 @@ def isUserExist(db, username, password):
     username = escape_string(username)
     cmd = f'''SELECT 1 FROM main_table WHERE name = '{username}'AND password = '{password}';'''
     v = cursor.execute(cmd)
-    # cursor.close()
+    cursor.close()
     if v == 1:
         return True # юзер существует
     return False
@@ -24,6 +24,7 @@ def checkNameAndEmail(db, username, email):
     v1 = cursor.execute(cmd)
     cmd = f'''SELECT 1 FROM main_table WHERE email = '{email}';'''
     v2 = cursor.execute(cmd)
+    cursor.close()
     # logging.debug(v1, v2)
     if v1 == 1 or v2 == 1:
         return True # юзер существует
@@ -46,6 +47,7 @@ def registerNewUser(db, username, email, password):
     '''
     cursor.execute(cmd)
     db.commit()
+    cursor.close()
     logging.debug(f'INFO: {username} was registered')
 
 # записывает в бд обновлённые данные по квизам
@@ -55,6 +57,7 @@ def updateUserQuizzes(db, username, data):
     cmd = f''' UPDATE main_table SET data = "{escape_string(json.dumps(data, ensure_ascii=False))}" WHERE name = "{username}"; '''
     cursor.execute(cmd)
     db.commit()
+    cursor.close()
 
 # получение информации из бд
 def getQuizzesFromDB(db, username):
@@ -63,6 +66,7 @@ def getQuizzesFromDB(db, username):
     cmd = f'''SELECT data FROM main_table WHERE name = "{username}";'''
     cursor.execute(cmd)
     data = cursor.fetchone()
+    cursor.close()
     # logging.debug(data)
     return data['data']
 
@@ -78,6 +82,7 @@ def insertQuizData(db, username, quizname, quiz_link, link_to_qr, six_digit_code
     # logging.debug(cmd)
     cursor.execute(cmd)
     db.commit()
+    cursor.close()
 
 def updateQuizData(db, username, quizname):
     username = escape_string(username)
@@ -90,6 +95,7 @@ def updateQuizData(db, username, quizname):
     logging.debug(cmd)
     cursor.execute(cmd)
     db.commit()
+    cursor.close()
 
 def getQuizQr(db, username, quizname):
     username = escape_string(username)
@@ -102,6 +108,7 @@ def getQuizQr(db, username, quizname):
     cursor.execute(cmd)
     data = cursor.fetchone()
     logging.debug(data)
+    cursor.close()
     return data['link_to_qr']
 
 def getQuizLink(db, username, quizname):
@@ -115,6 +122,7 @@ def getQuizLink(db, username, quizname):
     cursor.execute(cmd)
     data = cursor.fetchone()
     logging.debug(data)
+    cursor.close()
     return data['quiz_link']
 
 def getDataByCode(db, code, num):
@@ -131,6 +139,7 @@ def getDataByCode(db, code, num):
         '''
     cursor.execute(cmd)
     data = cursor.fetchone()
+    cursor.close()
     if data is None:
         return None
     return (data['quizname'], data['username'])
@@ -147,6 +156,7 @@ def writeDataToStatistic(db, owner_name, quiz_name, student_name, value):
     # logging.debug(cmd)
     cursor.execute(cmd)
     db.commit()
+    cursor.close()
 
 def getCurrentQuizzes(db, owner_name):
     owner_name = escape_string(owner_name)
@@ -158,6 +168,7 @@ def getCurrentQuizzes(db, owner_name):
     cursor.execute(cmd)
     data = cursor.fetchall()
     logging.debug(data)
+    cursor.close()
     if len(data) == 0:
         return 'None'
     return data
@@ -172,6 +183,7 @@ def getCurrentStatistics(db, owner_name, quizname):
     '''
     cursor.execute(cmd)
     data = cursor.fetchall()
+    cursor.close()
     if len(data) == 0:
         return 'None'
     return data
@@ -187,3 +199,4 @@ def deleteUnusedStatistics(db, owner_name, quizname):
     # logging.debug(cmd)
     cursor.execute(cmd)
     db.commit()
+    cursor.close()

@@ -110,10 +110,10 @@ def data_worker():
 
     if data['type'] == 'check_log':
         is_exist = db_funcs.isUserExist(db, data['username'], data['password'])
-        # logging.debug(data['username'], data['password'], is_exist)
         if is_exist:
             data_from_db = db_funcs.getQuizzesFromDB(db, data['username'])
             quizzes_data = db_funcs.getCurrentQuizzes(db, data['username'])
+            logging.info(f"New login - {data['username']}")
             return json.dumps({"is_exist": is_exist, "data": str(data_from_db), "quizzes_data": quizzes_data})
         return json.dumps({"is_exist": is_exist})
         
