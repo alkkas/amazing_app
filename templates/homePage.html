@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUIZZLE</title>
+    <meta name="description" content="Сайт для создания и проведения опросов.">
+    <meta property="og:image" content="https://quizzle.xamelllion.ru/static/images/icon.png">
+    <meta property="og:description" content="Сайт для создания и проведения опросов.">
+    <link rel="stylesheet" href="static/styles/homePage_ui.css">
+    <link rel="shortcut icon" href="/static/images/icon.png" type="image/x-icon">
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript" >
+        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+    
+        ym(87251626, "init", {
+            clickmap:true,
+            trackLinks:true,
+            accurateTrackBounce:true,
+            webvisor:true
+        });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/87251626" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="header_wrap">
+                <div class="header_left">
+                    <p class="hl_p"><a href="/start">Пройти опрос</a></p>
+                </div>
+                <div class="header_right">
+                    <button class="acc_btn runpop1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="container">
+            <div class="about_part">
+                <div class="text_about">
+                    <p class="about_p"><span>Quizzle</span> - сайт для создания и проведения опросов.</p>
+                    <!-- <p class="about_p"><span>Quizzle</span> - проводи опросы как царь.</p> -->
+                </div>
+                <div class="text_promo">
+                    <button class="acc_btn2 runpop2">Создать опрос</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="info_popup" class="info_popup">
+        <h1>Разработчики</h1>
+        <div class="info_popup_wrap">
+            
+            <div class="dev_block">
+
+                <div id="dev_1" class="personal_dev_block">
+                    <div class="top_dev">
+                        <img class="top_dev_img" src="/static/images/dev/1.jpg" alt="">
+                    </div>
+                    <div class="bottom_dev">
+                        <h1>Сидоров Вячеслав</h1>
+                        <p>Backend сайта</p>
+                    </div>
+                </div>
+
+                <div id="dev_2" class="personal_dev_block">
+                    <div class="top_dev">
+                        <img class="top_dev_img" src="https://avatars.githubusercontent.com/u/90968281?v=4" alt="">
+                    </div>
+                    <div class="bottom_dev">
+                        <h1>Черных Егор</h1>
+                        <p>Frontend сайта</p>
+                    </div>
+                </div>
+
+                <div id="dev_3" class="personal_dev_block">
+                    <div class="top_dev">
+                        <img class="top_dev_img" src="/static/images/dev/3.jpg" alt="">
+                    </div>
+                    <div class="bottom_dev">
+                        <h1>Рыжик Даниил</h1>
+                        <p>База данных</p>
+                    </div>
+                </div>
+
+                <div id="dev_4" class="personal_dev_block">
+                    <div class="top_dev">
+                        <img class="top_dev_img" src="/static/images/dev/4.jpg" alt="">
+                    </div>
+                    <div class="bottom_dev">
+                        <h1>Шаганов Егор</h1>
+                        <p>QRs</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- <p class="back"><a href="/start">Назад</a></p> -->
+    </div>
+
+
+    <!-- <div class="main_2">
+        <div class="container">
+            <div class="game_code">
+                <h1></h1>
+                <form action="">
+                    <div class="centre_block">
+                        <input id="nickname_field" placeholder="Введите код квиза" type="text" class="input_nickname_field">
+                        <button id="send_quiz" type="submit" class="enter_nickname">Enter</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div> -->
+
+    <div class="auth_popup">
+        <div class="popup_body">
+            <div class="close_popup">
+                <!-- <img src="/static/images/close.png" width="32px" height="32px" alt=""> -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#fff" class="bi bi-x-lg" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
+                    <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
+                </svg>
+                
+            </div>
+            
+            <div class="auth_wrap">
+                <h1>Регистрация</h1>
+                <div class="centre_block">
+                    <form action="" name="reg_form">
+                        <div class="hype_div">
+                            <input id="reg_email" autocomplete="off" placeholder="Email" type="email" class="input_nickname_field">
+                            <input id="reg_usname" autocomplete="off" placeholder="Имя пользователя" type="text" class="input_nickname_field">
+                            <input id="reg_pass" autocomplete="off" placeholder="Пароль" type="password" class="input_nickname_field">
+                        </div>
+                        <button id="register" type="submit" class="enter_nickname">Enter</button>
+                    </form>
+                </div>
+                <p class="log_p">Есть аккаунт? <a href="/admin" class="log_a">Войти</a></p>
+            </div>  
+        </div>
+    </div>
+    <script src="/static/js/homePage.js"></script>
+</body>
+</html>

@@ -1,163 +1,202 @@
-import pymysql
-import json
 from pymysql.converters import escape_string
+import json
+import extends
+import logging
 
-
-def connect():  # Подключение к бд
-    global cursor
-    global connection
-    try:
-        connection = pymysql.connect(
-            host="localhost",
-            port=3306,
-            user="root",
-            password="",
-            database="as_proj",
-            cursorclass=pymysql.cursors.DictCursor
-        )
-        cursor = connection.cursor()
-        print('Подключено!')
-    except Exception as ex:
-        print('Ошибка при подключении!')
-        print(ex)
-
-
-def com():  # Изменение фундамента бд
-    cmd = '''SET names 'utf8';'''
-    cursor.execute(cmd)
-    connection.commit()
-    print('Команда редактирования выполнена')
-
-
-def teacher_imit():  # Имитация переменной с данными от преподавателя
-    teacher_info = {"name": "username", "password": "12345678"}
-    teacher_data = {"name": "Amazing quiz", "quiz": [
-        {
-            "question": "What's the largest planet in solar system?",
-            "answers": [
-                "variant 1",
-                "variant 2",
-                "variant 3"
-            ]
-        },
-        {
-            "question": "Why Mars has red color?",
-            "answers": [
-                "variant 1",
-                "variant 2",
-                "variant 3"
-            ]
-        },
-        {
-            "question": "Почему бебра сладкая???",
-            "answers": [
-                "variant 1",
-                "variant 2",
-                "variant 3"
-            ]
-        }
-    ], 'teacher_info': teacher_info}
-    return teacher_data
-
-
-def check_if_user_exists(data): # проверка аккаунта админа для последующего входа
-    username = data['username']
-    password = data['password']
+# проверка аккаунта админа для последующего входа
+def isUserExist(db, username, password):
+    cursor = db.cursor()
+    password = extends.genHash(password)
+    username = escape_string(username)
     cmd = f'''SELECT 1 FROM main_table WHERE name = '{username}'AND password = '{password}';'''
     v = cursor.execute(cmd)
+    cursor.close()
     if v == 1:
         return True # юзер существует
     return False
 
+# проверка имени пользователя и email на наличие в базе
+def checkNameAndEmail(db, username, email):
+    cursor = db.cursor()
+    username = escape_string(username)
+    email = escape_string(email)
+    cmd = f'''SELECT 1 FROM main_table WHERE name = '{username}';'''
+    v1 = cursor.execute(cmd)
+    cmd = f'''SELECT 1 FROM main_table WHERE email = '{email}';'''
+    v2 = cursor.execute(cmd)
+    cursor.close()
+    # logging.debug(v1, v2)
+    if v1 == 1 or v2 == 1:
+        return True # юзер существует
+    return False
 
-def quiz_updater(username, data):  # записывает в бд обновлённые данные по квизам
-    a = str(data).replace('\'', '\"')
-    cmd = f''' UPDATE main_table SET data = "{escape_string(a)}" WHERE name = "{username}"; '''
+def registerNewUser(db, username, email, password):
+    username = escape_string(username)
+    email = escape_string(email)
+    data_temp = '''{"name": "'''+username+'''", "quizes": []}'''
+    password_hash = extends.genHash(password)
+    cursor = db.cursor()
+
+    cursor.execute('''SELECT MAX(id) FROM main_table''')
+    max_id =  cursor.fetchone()
+    max_id = max_id['MAX(id)'] + 1
+
+    cmd = f'''
+        INSERT INTO main_table (id, name, email, password, settings, data)
+        VALUES ({max_id}, "{username}", "{email}", "{password_hash}", "", "{escape_string(data_temp)}");
+    '''
     cursor.execute(cmd)
-    connection.commit()
+    db.commit()
+    cursor.close()
+    logging.debug(f'INFO: {username} was registered')
 
-def quizies_getter(username):  # получение информации из бд
+# записывает в бд обновлённые данные по квизам
+def updateUserQuizzes(db, username, data):
+    username = escape_string(username)
+    cursor = db.cursor()
+    cmd = f''' UPDATE main_table SET data = "{escape_string(json.dumps(data, ensure_ascii=False))}" WHERE name = "{username}"; '''
+    cursor.execute(cmd)
+    db.commit()
+    cursor.close()
+
+# получение информации из бд
+def getQuizzesFromDB(db, username):
+    username = escape_string(username)
+    cursor = db.cursor()
     cmd = f'''SELECT data FROM main_table WHERE name = "{username}";'''
     cursor.execute(cmd)
-    for row in cursor:
-        a = row['data']
-    # print(a)
-    return a
+    data = cursor.fetchone()
+    cursor.close()
+    # logging.debug(data)
+    return data['data']
 
-def update_dyn(data):  # Авто-создание критериев в динамической таблице
-    global k
-    k = len(data['quiz'])
-    hp = 'q'
-    for i in range(1, k + 1):
-        hp += str(i)
-        cmd = f'''ALTER TABLE template_1 ADD COLUMN {hp} INT;'''
-        cursor.execute(cmd)
-        connection.commit()
-        hp = 'q'
-    print('Критерии добавлены!')
-
-
-def update_stc(data):  # ДОПИСАТЬ ПРОВЕРКУ ПАРОЛЯ И ИМЕНИ ПОЛЬЗОВАТЕЛЯ
-    a = str(data)
-    cmd = f'''INSERT INTO main_table (name, password, task_name, data)
-    VALUES ("{data['teacher_info']['name']}", "{data['teacher_info']['password']}", "{data['name']}", "{escape_string(a)}");'''
+# записывает данные по созданному квизу в БД
+def insertQuizData(db, username, quizname, quiz_link, link_to_qr, six_digit_code, twelve_digit_code):
+    username = escape_string(username)
+    quizname = escape_string(quizname)
+    cursor = db.cursor()
+    cmd = f'''
+        INSERT INTO data (username, quizname, quiz_link, link_to_qr, six_digit_code, twelve_digit_code)
+        VALUES ("{username}", "{quizname}", "{quiz_link}", "{link_to_qr}", "{six_digit_code}", "{twelve_digit_code}");
+    '''
+    # logging.debug(cmd)
     cursor.execute(cmd)
-    connection.commit()
+    db.commit()
+    cursor.close()
 
-
-def fill_dyn(pupil_answer):  # Заполнение таблицы в бд, используя ответ школьника
-    marks = []
-    hp = 'q'
-    name = pupil_answer[0]
-    for i in pupil_answer[1].values():
-        marks.append(i)
-    cmd = f'''INSERT template_1(name)
-    VALUES("{name}");'''
+def updateQuizData(db, username, quizname):
+    username = escape_string(username)
+    quizname = escape_string(quizname)
+    cursor = db.cursor()
+    cmd = f'''
+        DELETE FROM data
+        WHERE username = "{username}" AND quizname = "{quizname}";
+    '''
+    logging.debug(cmd)
     cursor.execute(cmd)
-    for i in range(1, k + 1):
-        hp += str(i)
-        cmd = f'''UPDATE template_1 SET {hp} = {marks[i - 1]};'''
-        cursor.execute(cmd)
-        connection.commit()
-        hp = 'q'
-    pupil_answer = []
-    print('Ответ занесен!')
+    db.commit()
+    cursor.close()
 
-
-def clean():  # Полная очистка таблицы
-    hp = 'q'
-    cmd = '''TRUNCATE TABLE template_1;'''
+def getQuizQr(db, username, quizname):
+    username = escape_string(username)
+    quizname = escape_string(quizname)
+    cursor = db.cursor()
+    cmd = f'''
+        SELECT link_to_qr FROM data 
+        WHERE username = "{username}" AND quizname = "{quizname}";
+    '''
     cursor.execute(cmd)
-    connection.commit()
-    for i in range(1, 200):
-        try:
-            hp += str(i)
-            cmd = f'''ALTER TABLE template_1 DROP COLUMN {hp};'''
-            cursor.execute(cmd)
-            connection.commit()
-            hp = 'q'
-        except Exception as ex:
-            break
-    cmd = "ALTER TABLE template_1 AUTO_INCREMENT=1;"
+    data = cursor.fetchone()
+    logging.debug(data)
+    cursor.close()
+    return data['link_to_qr']
+
+def getQuizLink(db, username, quizname):
+    username = escape_string(username)
+    quizname = escape_string(quizname)
+    cursor = db.cursor()
+    cmd = f'''
+        SELECT quiz_link FROM data 
+        WHERE username = "{username}" AND quizname = "{quizname}";
+    '''
     cursor.execute(cmd)
-    connection.commit()
-    cmd = "ALTER TABLE main_table AUTO_INCREMENT=1;"
+    data = cursor.fetchone()
+    logging.debug(data)
+    cursor.close()
+    return data['quiz_link']
+
+def getDataByCode(db, code, num):
+    cursor = db.cursor()
+    if num == 12:
+        cmd = f'''
+            SELECT username, quizname FROM data 
+            WHERE twelve_digit_code = "{code}";
+        '''
+    if num == 6:
+        cmd = f'''
+            SELECT username, quizname FROM data 
+            WHERE six_digit_code = "{code}";
+        '''
     cursor.execute(cmd)
-    connection.commit()
-    cmd = "TRUNCATE TABLE main_table;"
+    data = cursor.fetchone()
+    cursor.close()
+    if data is None:
+        return None
+    return (data['quizname'], data['username'])
+
+def writeDataToStatistic(db, owner_name, quiz_name, student_name, value):
+    owner_name = escape_string(owner_name)
+    quiz_name = escape_string(quiz_name)
+    student_name = escape_string(student_name)
+    cursor = db.cursor()
+    cmd = f'''
+        INSERT INTO quiz_statistics (owner_name, quiz_name, student_name, value)
+        VALUES ("{owner_name}", "{quiz_name}", "{student_name}", "{escape_string(json.dumps(value, ensure_ascii=False))}");
+    '''
+    # logging.debug(cmd)
     cursor.execute(cmd)
-    connection.commit()
-    print('Очищено!')
+    db.commit()
+    cursor.close()
 
+def getCurrentQuizzes(db, owner_name):
+    owner_name = escape_string(owner_name)
+    cursor = db.cursor()
+    cmd = f'''
+        SELECT quizname, link_to_qr, six_digit_code FROM data
+        WHERE username = "{owner_name}"
+    '''
+    cursor.execute(cmd)
+    data = cursor.fetchall()
+    logging.debug(data)
+    cursor.close()
+    if len(data) == 0:
+        return 'None'
+    return data
 
-def closing():  # Отключение от базы данных
-    connection.close()
-    print('Отключено!')
+def getCurrentStatistics(db, owner_name, quizname):
+    owner_name = escape_string(owner_name)
+    quizname = escape_string(quizname)
+    cursor = db.cursor()
+    cmd = f'''
+        SELECT value FROM quiz_statistics
+        WHERE owner_name = "{owner_name}" AND quiz_name = "{quizname}";
+    '''
+    cursor.execute(cmd)
+    data = cursor.fetchall()
+    cursor.close()
+    if len(data) == 0:
+        return 'None'
+    return data
 
-
-connect()
-# clean()
-# update_dyn(teacher_imit())
-# update_stc(teacher_imit())
-# quiz_get()
-# closing()
+def deleteUnusedStatistics(db, owner_name, quizname):
+    owner_name = escape_string(owner_name)
+    quizname = escape_string(quizname)
+    cursor = db.cursor()
+    cmd = f'''
+        DELETE FROM quiz_statistics
+        WHERE owner_name = "{owner_name}" AND quiz_name = "{quizname}";
+    '''
+    # logging.debug(cmd)
+    cursor.execute(cmd)
+    db.commit()
+    cursor.close()
