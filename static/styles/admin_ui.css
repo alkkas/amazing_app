@@ -553,6 +553,15 @@ body {
 
 /* для планшетов */
 @media (max-width: 992px) {
+  .popup_close {
+    width: 20px;
+    height: 20px;
+  }
+  .statistic_title,
+  .h1_charts {
+    font-size: 23px;
+    margin-bottom: 20px;
+  }
   .task-tool {
     width: 35px;
     height: 35px;

@@ -142,7 +142,7 @@ body {
   margin: 5px 0;
   padding: 5px;
   position: relative;
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 .quiz_answer::before {
   content: "";
@@ -168,7 +168,6 @@ body {
   display: flex;
   justify-content: flex-end;
 }
-
 
 .info_popup {
   background: #1e3d58;
@@ -202,7 +201,7 @@ body {
   justify-content: center;
   padding: 20px 10px;
   cursor: pointer;
-  background: #2B577E;
+  background: #2b577e;
   transition: 0.2s;
 }
 .personal_dev_block:hover {
@@ -213,7 +212,7 @@ body {
   display: grid;
   grid-column-gap: 15px;
   grid-row-gap: 15px;
-  grid-template-columns: repeat( 4, 220px );
+  grid-template-columns: repeat(4, 220px);
 }
 .top_dev_img {
   max-width: 150px;
@@ -237,14 +236,8 @@ body {
 }
 .back a {
   text-decoration: none;
-  color: #D45B67;
+  color: #d45b67;
 }
-
-
-
-
-
-
 
 /* Хз для чего */
 /* @media(max-width: 970px) {
@@ -254,12 +247,29 @@ body {
 } */
 
 /* для планшетов */
-@media(max-width: 992px) {
+@media (max-width: 992px) {
+  .quiz_title {
+    font-size: 23px;
+  }
+  .quiz_item_title {
+    font-size: 18px;
+  }
+  .quiz_answer {
+    font-size: 16px;
+  }
+  .quiz_send {
+    margin: 15px 0 0 0;
+    font-size: 16px;
+    padding: 10px 15px;
+  }
+  .send_block {
+    justify-content: flex-start;
+  }
   .container {
     max-width: 768px;
   }
   .dev_block {
-    grid-template-columns: repeat( 2, 200px );
+    grid-template-columns: repeat(2, 200px);
   }
   .top_dev_img {
     max-width: 140px;
@@ -270,8 +280,7 @@ body {
   .bottom_dev p {
     font-size: 16px;
   }
-  
-  
+
   .quiz {
     margin: 20px;
     padding: 15px;
@@ -283,13 +292,13 @@ body {
 }
 
 /* для мобил */
-@media(max-width: 767px) {
+@media (max-width: 767px) {
   .container {
     max-width: none;
     padding: 0;
   }
   .dev_block {
-    grid-template-columns: repeat( 2, 175px );
+    grid-template-columns: repeat(2, 175px);
   }
   .top_dev_img {
     max-width: 130px;
@@ -307,9 +316,6 @@ body {
     border-radius: 10px;
   }
   .quiz_field {
-    margin-left: 40px;
-  }
-  .quiz_item_title {
-    font-size: 22px;
+    margin-left: 30px;
   }
 }
