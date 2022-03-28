@@ -1,5 +1,6 @@
 __pycache__/
 .vscode/
+node_modules
 static/qrs/*.png
 test.json
 bot.py

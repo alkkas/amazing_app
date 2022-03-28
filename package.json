@@ -1,0 +1,24 @@
+{
+  "name": "amazing_app",
+  "version": "1.0.0",
+  "description": "Егор, сделай репозиторий приватным, пока школота не нашла его.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alkkas/amazing_app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alkkas/amazing_app/issues"
+  },
+  "homepage": "https://github.com/alkkas/amazing_app#readme",
+  "dependencies": {
+    "eslint": "^8.9.0",
+    "prettier": "^2.5.1"
+  }
+}

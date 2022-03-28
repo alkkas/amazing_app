@@ -22,7 +22,9 @@
 body {
   background: #1e3d58;
 }
-
+.disabled-scroll {
+  overflow: hidden;
+}
 .container {
   margin: 0 auto;
   padding: 0 35px;

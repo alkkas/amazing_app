@@ -1,133 +1,151 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>ADMIN PAGE</title>
-        <link rel="stylesheet" href="static/styles/admin_ui.css">
-        <link rel="shortcut icon" href="/static/images/icon.png" type="image/x-icon">
-    </head>
-<body>
-    <div class="statistic_wrapper">
-        <div class="statistic">
-            <div class="popup_close">
-                <img src="/static/images/cancel.png" alt="close page">
-            </div>
-            <!-- <div class="popup_reload">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ADMIN PAGE</title>
+    <link rel="stylesheet" href="static/styles/admin_ui.css" />
+    <link
+      rel="shortcut icon"
+      href="/static/images/icon.png"
+      type="image/x-icon"
+    />
+  </head>
+  <body>
+    <div class="statistic_wrapper popup">
+      <div class="statistic">
+        <div class="popup_close">
+          <img src="/static/images/cancel.png" alt="close page" />
+        </div>
+        <!-- <div class="popup_reload">
                 <img src="/static/images/reload.png" alt="reload page">
             </div> -->
-            <h1 class="statistic_title">Название опроса</h1>
-            <div class="statistic_table_wrapper">
-                <table class="statistic_table">
-                    <thead>
-                        <tr class="statistic_headers">
-                            <th>Имя</th>
-                            <th class="table_question_title">Название опроса 1</th>
-                            <th class="table_question_title">Название опроса 1</th>
-                            <th class="table_question_title">Название опроса 1</th>
-                            <th class="table_question_title">Название опроса 1</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table_content">
-                        <tr >
-                            <th>Имя 1</th>
-                            <td>Ответ 1</td>
-                            <td>ответ 1</td>
-                            <td>ответ 2</td>
-                            <td>ответ 3</td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                    </tfoot>
-                </table>
-            </div>
-            <div class="statistics_charts">
-                <h1 class="h1_charts">Популярные ответы:</h1>
-                <div class="charts_data">
-
-                </div>
-            </div>
+        <h1 class="statistic_title">Название опроса</h1>
+        <div class="statistic_table_wrapper">
+          <table class="statistic_table">
+            <thead>
+              <tr class="statistic_headers">
+                <th>Имя</th>
+                <th class="table_question_title">Название опроса 1</th>
+                <th class="table_question_title">Название опроса 1</th>
+                <th class="table_question_title">Название опроса 1</th>
+                <th class="table_question_title">Название опроса 1</th>
+              </tr>
+            </thead>
+            <tbody class="table_content">
+              <tr>
+                <th>Имя 1</th>
+                <td>Ответ 1</td>
+                <td>ответ 1</td>
+                <td>ответ 2</td>
+                <td>ответ 3</td>
+              </tr>
+            </tbody>
+            <tfoot></tfoot>
+          </table>
         </div>
-
+        <div class="statistics_charts">
+          <h1 class="h1_charts">Популярные ответы:</h1>
+          <div class="charts_data"></div>
+        </div>
+      </div>
     </div>
 
-
-    <div class="login_popup">
-        <h1 class="login_popup_h1">Авторизация</h1>
-        <div class="centre_block">
-            <form action="">
-                <div class="hype_div">
-                    <input id="nickname_field" placeholder="Имя пользователя" type="text" class="input_nickname_field">
-                    <input id="password_field" placeholder="Пароль" type="password" class="input_nickname_field">
-                </div>
-                <button type="submit" class="enter_nickname">Enter</button>
-            </form>
-        </div>
+    <div class="login_popup popup">
+      <h1 class="login_popup_h1">Авторизация</h1>
+      <div class="centre_block">
+        <form action="">
+          <div class="hype_div">
+            <input
+              id="nickname_field"
+              placeholder="Имя пользователя"
+              type="text"
+              class="input_nickname_field"
+            />
+            <input
+              id="password_field"
+              placeholder="Пароль"
+              type="password"
+              class="input_nickname_field"
+            />
+          </div>
+          <button type="submit" class="enter_nickname">Enter</button>
+        </form>
+      </div>
     </div>
-    
-    <div class="qr_code_popup_wrapper">
-        <div class="qr_code_popup">
-            <div class="popup_close">
-                <img src="/static/images/cancel.png" alt="close page">
-            </div>
-            <h1 class="qr_code_popup_title"></h1>
 
-            <div class="qr_data">
-                <h1 class="sixdigitcode">Код для входа: <span class="sixdigitcode_span"></span></h1>
-                <div class="qr_block">
-                    <img src="#" alt="big qr code" class="qr_code_popup_img">
-                </div>
-            </div>
-
-            <div class="quiz_start_end">
-                <div class="st_nd_btns">
-                    <button class="st_quiz_btn">Начать опрос</button>
-                    <button class="nd_quiz_btn">Завершить опрос</button>
-                </div>
-            </div>
-
+    <div class="qr_code_popup_wrapper popup">
+      <div class="qr_code_popup">
+        <div class="popup_close">
+          <img src="/static/images/cancel.png" alt="close page" />
         </div>
+        <h1 class="qr_code_popup_title"></h1>
+
+        <div class="qr_data">
+          <h1 class="sixdigitcode">
+            Код для входа: <span class="sixdigitcode_span"></span>
+          </h1>
+          <div class="qr_block">
+            <img src="#" alt="big qr code" class="qr_code_popup_img" />
+          </div>
+        </div>
+
+        <div class="quiz_start_end">
+          <div class="st_nd_btns">
+            <button class="st_quiz_btn">Начать опрос</button>
+            <button class="nd_quiz_btn">Завершить опрос</button>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="edit_pop_up">
-        <div class="edit_pop_up_container">
-            <div class="popup_close">
-                <img src="/static/images/cancel.png" alt="close page">
-            </div>
-            
-            <h1 class="edit_pop_up_title">Title</h1>
-
-            <div class="edit_pop_up_items ">
-                
-            </div>
-            <div class="add_question_btn_div">
-                <button class="edit_pop_up_question add_question">Добавить вопрос
-                    <img src="/static/images/cancel.png" alt="add answer" class="add_field_btn">
-                </button>
-            </div>
-            
-            <div class="edit_pop_up_btns">
-
-                <button class="edit_pop_up_del">Удалить</button>
-                <button class="edit_pop_up_save">Сохранить</button>
-            </div>
+    <div class="edit_pop_up popup">
+      <div class="edit_pop_up_container">
+        <div class="popup_close">
+          <img src="/static/images/cancel.png" alt="close page" />
         </div>
+
+        <h1 class="edit_pop_up_title">Title</h1>
+
+        <div class="edit_pop_up_items"></div>
+        <div class="add_question_btn_div">
+          <button class="edit_pop_up_question add_question">
+            Добавить вопрос
+            <img
+              src="/static/images/cancel.png"
+              alt="add answer"
+              class="add_field_btn"
+            />
+          </button>
+        </div>
+
+        <div class="edit_pop_up_btns">
+          <button class="edit_pop_up_del">Удалить</button>
+          <button class="edit_pop_up_save">Сохранить</button>
+        </div>
+      </div>
     </div>
     <div class="main">
-        <div class="container">
-            <div class="header_block">
-                <h1 class="hello"></h1>
-                <button class="logout_btn" onclick="logout_click()">Выйти</button>
-            </div>
-            <div class="top_block">
-                <div class="top_block_input_div"><input type="text" class="create_task_title" placeholder="Введите название опроса:"></div>
-                <div class="top_block_button"><button class="create_task">Новый опрос</button></div>
-                
-                
-            </div>
-            <h1 class="main_hr"></h1>
-            <div class="tasks">
-                <!-- <div class="task_item">
+      <div class="container">
+        <div class="header_block">
+          <h1 class="hello"></h1>
+          <button class="logout_btn">Выйти</button>
+        </div>
+        <div class="top_block">
+          <div class="top_block_input_div">
+            <input
+              type="text"
+              class="create_task_title"
+              placeholder="Введите название опроса:"
+            />
+          </div>
+          <div class="top_block_button">
+            <button class="create_task">Новый опрос</button>
+          </div>
+        </div>
+        <h1 class="main_hr"></h1>
+        <div class="tasks">
+          <!-- <div class="task_item">
                     <h2 class="task_title">Почему пельмень внешне напоминает планету сатурн?</h2>
                     <div class="task_item_flex">
                         <div class="task_statistics task-tool"><img src="/static/images/statistics.png" alt="statistic"></div>
@@ -135,10 +153,11 @@
                         <div class="task_qr task-tool"><img src="/static/images/qr-code.png" alt="create qr code"></div>
                     </div>
                 </div> -->
-            </div>
         </div>
-
+      </div>
     </div>
-    <script src="/static/js/admin_ui.js"></script>
-</body>
+    <script type="module" src="/static/js/modules.js"></script>
+
+    <script type="module" src="/static/js/admin_ui.js"></script>
+  </body>
 </html>
