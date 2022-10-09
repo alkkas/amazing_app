@@ -26,7 +26,6 @@ enterBtn.addEventListener('click', (e) => {
             console.log(resp)
             if (resp['is_exist']=='false') {
                 alert('Упс, кажется вы ввели неверный код.');
-                codeField.value = '';
                 return;
             }
             localStorage.setItem('login', nicknameField.value);

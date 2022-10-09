@@ -2,3 +2,5 @@ flask
 Pillow
 qrcode
 pymysql
+sqlalchemy
+psycopg2-binary

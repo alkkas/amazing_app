@@ -1,28 +1,16 @@
 from flask import Flask, render_template, request, redirect, send_from_directory
-import db_funcs, extends
+import modules.db_funcs as db_funcs, modules.extends as extends
 import logging
 import pymysql
-import config
+import modules.config as config
 import json
 import os
 
-logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=logging.DEBUG, filename='log.log', filemode='w', encoding='UTF-8', datefmt='%d-%b-%y %H:%M:%S')
+logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s',\
+    level=logging.DEBUG, filename='log.log', filemode='a',\
+        encoding='UTF-8', datefmt='%d-%b-%y %H:%M:%S')
 logging.getLogRecordFactory
 
-
-global db
-try:
-    db = pymysql.connect(
-        host=config.db_host,
-        port=3306,
-        user=config.db_user,
-        password=config.db_password,
-        database=config.db_name,
-        cursorclass=pymysql.cursors.DictCursor
-    )
-    logging.info('Connected to DB!')
-except Exception as ex:
-    logging.error('Error in DB connection!', exc_info=True)
 
 app = Flask(__name__)
 
@@ -32,13 +20,12 @@ def student_func():
         data = request.get_json(force=True)
 
         if data['type'] == 'sixDigitCode':
-            code = data['code']
-            dbResp = db_funcs.getDataByCode(db, data['code'], 6)
+            dbResp = db_funcs.getDataByCode(data['code'], 6)
             if dbResp is None:
                 return json.dumps({'is_exist': 'false'})
             else:
                 quizname, username = dbResp
-                link = db_funcs.getQuizLink(db, username, quizname)
+                link = db_funcs.getQuizLink(username, quizname)
                 return json.dumps({'is_exist': 'true', 'link': link})
 
         if data['type'] == 'registerUser':
@@ -46,9 +33,9 @@ def student_func():
             username = data['username']
             password = data['password']
             logging.info(f'New user was registred: {email} {username}')
-            if db_funcs.checkNameAndEmail(db, username, email) == False: #значит такого юзера нет в базе
-                db_funcs.registerNewUser(db, username, email, password)
-                quizzes = db_funcs.getQuizzesFromDB(db, username)
+            if db_funcs.checkNameAndEmail(username, email) == False: #значит такого юзера нет в базе
+                db_funcs.registerNewUser(username, email, password)
+                quizzes = db_funcs.getQuizzesFromDB(username)
                 
                 return json.dumps({'userAlreadyExist': 'false', 'quizzes': quizzes})
             else:
@@ -68,17 +55,17 @@ def admin_func():
 @app.route("/quiz/<twelveDigitCode>", methods=['GET', 'POST'])
 def quiz_func(twelveDigitCode):
     # проверяю, есть ли запрашиваемый URL
-    if db_funcs.getDataByCode(db, twelveDigitCode, 12) is None:
+    if db_funcs.getDataByCode(twelveDigitCode, 12) is None:
         return redirect('/', code=302)
 
     if request.method == 'POST':
         data = request.get_json(force=True)
         if data['type'] == 'readFromDB':
             try:       
-                quizname, username = db_funcs.getDataByCode(db, twelveDigitCode, 12)
-                allQuizData = db_funcs.getQuizzesFromDB(db, username)
-            except (pymysql.err.InternalError, pymysql.err.InterfaceError):
-                logging.error('DB error while read user quizzes!')
+                quizname, username = db_funcs.getDataByCode(twelveDigitCode, 12)
+                allQuizData = db_funcs.getQuizzesFromDB(username)
+            except Exception as e:
+                logging.error('DB error while read user quizzes!', exc_info=True)
             
             allQuizData = json.loads(allQuizData)
             quiz = ''
@@ -95,10 +82,10 @@ def quiz_func(twelveDigitCode):
             studentName = data['data']['studentName']
 
             try:
-                quizname, owner_name = db_funcs.getDataByCode(db, twelveDigitCode, 12)
-                db_funcs.writeDataToStatistic(db, owner_name, quizname, studentName, data['data'])
-            except (pymysql.err.InternalError, pymysql.err.InterfaceError):
-                logging.error('DB error while write user quizzes!')
+                quizname, owner_name = db_funcs.getDataByCode(twelveDigitCode, 12)
+                db_funcs.writeDataToStatistic(owner_name, quizname, studentName, data['data'])
+            except Exception as e:
+                logging.error('DB error while write user quizzes!', exc_info=True)
             return json.dumps({'go': 'out'})
 
     return render_template('userQuizPage.html')
@@ -109,21 +96,23 @@ def data_worker():
     data = request.get_json(force=True)
 
     if data['type'] == 'check_log':
-        is_exist = db_funcs.isUserExist(db, data['username'], data['password'])
+        is_exist = db_funcs.isUserExist(data['username'], data['password'])
         if is_exist:
-            data_from_db = db_funcs.getQuizzesFromDB(db, data['username'])
-            quizzes_data = db_funcs.getCurrentQuizzes(db, data['username'])
+            data_from_db = db_funcs.getQuizzesFromDB(data['username'])
+            # quizzes_data = db_funcs.getCurrentQuizzes(data['username'])
             logging.info(f"New login - {data['username']}")
-            return json.dumps({"is_exist": is_exist, "data": str(data_from_db), "quizzes_data": quizzes_data})
+            # return json.dumps({"is_exist": is_exist, "data": str(data_from_db), "quizzes_data": quizzes_data})
+            print(data_from_db, type(data_from_db))
+            return json.dumps({"is_exist": is_exist, "data": data_from_db})
         return json.dumps({"is_exist": is_exist})
         
 
     if data['type'] == 'quizies':
         # logging.debug(data)
         try:
-            db_funcs.updateUserQuizzes(db, data['name'], data['data'])
-        except (pymysql.err.InternalError, pymysql.err.InterfaceError):
-            logging.error('Запись в бд - иди нахуй')
+            db_funcs.updateUserQuizzes(data['name'], data['data'])
+        except Exception as e:
+            logging.error('Запись в бд - иди нахуй', exc_info=True)
         return json.dumps({"hello": "world"})
     
     if data['type'] == 'startQuiz':
@@ -137,9 +126,9 @@ def data_worker():
         # logging.debug(linkToQuiz)
         pathToImgQr = extends.genQr(linkToQuiz, linkCode+'.png')
         try:
-            db_funcs.insertQuizData(db, username, quizname, linkToQuiz, pathToImgQr, sixDigitCode, linkCode)
-        except (pymysql.err.InternalError, pymysql.err.InterfaceError, AttributeError):
-            logging.debug('startQuiz - иди нахуй')
+            db_funcs.insertQuizData(username, quizname, linkToQuiz, pathToImgQr, sixDigitCode, linkCode)
+        except Exception as e:
+            logging.debug('startQuiz - иди нахуй', exc_info=True)
         return json.dumps({"sixdigitcode": sixDigitCode, "pathtoimg": pathToImgQr})
     
     if data['type'] == 'endQuiz':
@@ -147,10 +136,10 @@ def data_worker():
         quizname = data['quizname']
         logging.info(f'END QUIZ {username} - {quizname}')
         try:
-            linkToQr = db_funcs.getQuizQr(db, username, quizname)
-            db_funcs.updateQuizData(db, username, quizname)
-            db_funcs.deleteUnusedStatistics(db, username, quizname)
-        except (pymysql.err.InternalError, pymysql.err.InterfaceError, AttributeError, TypeError) as er:
+            linkToQr = db_funcs.getQuizQr(username, quizname)
+            db_funcs.updateQuizData(username, quizname)
+            db_funcs.deleteUnusedStatistics(username, quizname)
+        except Exception as e:
             logging.error('endQuiz - иди нахуй', exc_info=True)
 
         try:
@@ -169,7 +158,7 @@ def data_worker():
         # update data field in db, and - DONE
         # dong something with statistics
     if data['type'] == 'getStatistics':
-        statistics_data = db_funcs.getCurrentStatistics(db, data['username'], data['quiz_name'])
+        statistics_data = db_funcs.getCurrentStatistics(data['username'], data['quiz_name'])
         logging.info(f"Getting statistics for {data['username']} - {data['quiz_name']}")
         return json.dumps({"statistics_data": statistics_data})
 
@@ -179,4 +168,4 @@ def static_from_root():
     return send_from_directory(app.static_folder, request.path[1:])
 
 if __name__ == '__main__':
-    app.run(debug=False, host='0.0.0.0', port=5050)
+    app.run(debug=True, host='127.0.0.1', port=5050)

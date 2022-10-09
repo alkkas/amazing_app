@@ -226,16 +226,15 @@ function openStatistics(item) {
   };
 
   send_to_server("/avenue", d).then((data) => {
-    console.log(data);
 
     let students = data["statistics_data"];
-    if (data["statistics_data"] == "None") {
+    if (data["statistics_data"] == null) {
       alert("Нет информации по опросу!");
       return;
     }
 
-    let students_arr = students.map((i) => JSON.parse(i.value));
-
+    // let students_arr = students.map((i) => i.value);
+    let students_arr = students;
     statistic.classList.add("active");
     disableScroll();
 
@@ -274,7 +273,7 @@ function openStatistics(item) {
       </p>`;
     }
 
-    currentTitle = document.querySelector(".statistic_title").innerHTML;
+    let currentTitle = document.querySelector(".statistic_title").innerHTML;
   });
 }
 function login() {
@@ -295,6 +294,7 @@ function login() {
       };
 
       let ch_exist = await send_to_server("/avenue", data);
+      console.log(ch_exist);
 
       if (ch_exist["is_exist"] == true) {
         console.log("done login");
@@ -302,6 +302,7 @@ function login() {
 
         enterPageBlock.style.display = "none";
         mainPartBlock.style.display = "block";
+
 
         let data_from_db = ch_exist["data"];
         setUser(JSON.parse(data_from_db));

@@ -7,3 +7,4 @@ bot.py
 config.py
 logs.log
 log.log
+modules/__pycache__/
